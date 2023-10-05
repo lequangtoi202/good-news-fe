@@ -77,7 +77,7 @@ function CategoryDetail() {
     };
 
     fetchCategory();
-  }, []);
+  }, [id]);
   return (
     <div className={cx('wrapper')}>
       <div className={cx('breadcrumb-area')}>

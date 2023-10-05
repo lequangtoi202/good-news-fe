@@ -4,6 +4,7 @@ import errorReducer from './errorReducer';
 import successReducer from './successReducer';
 import commentReducer from './commentReducer';
 import bookmarkReducer from './bookmarkReducer';
+import adminReducer from './adminReducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   success: successReducer,
   comment: commentReducer,
   bookmarks: bookmarkReducer,
+  admin: adminReducer,
 });
 
 export const store = configureStore({

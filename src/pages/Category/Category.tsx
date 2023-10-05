@@ -21,7 +21,7 @@ const cx = classNames.bind(styles);
 
 function CategoryComp() {
   const error = useSelector((state: RootState) => state.error);
-  const { handleShowError, handleShowSuccess } = UtilsFunction();
+  const { handleShowError } = UtilsFunction();
   const [categories, setCategories] = useState<Category[]>([]);
   const [articles, setArticles] = useState<{ [key: string]: Article[] }>({}); // Đảm bảo bạn đã định nghĩa kiểu dữ liệu Article
   const [tags, setTags] = useState<TagModel[]>([]);

@@ -1,3 +1,6 @@
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import TurnedInNotOutlinedIcon from '@mui/icons-material/TurnedInNotOutlined';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { Avatar, Breadcrumbs, Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -9,20 +12,18 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie/es6';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import TurnedInNotOutlinedIcon from '@mui/icons-material/TurnedInNotOutlined';
 
 import CommentBox from '../../components/CommentBox';
+import Tag from '../../components/Tag/Tag';
 import { API_URL } from '../../constant';
 import MediaCard from '../../layout/components/MediaCard/MediaCard';
 import { Article } from '../../model/Article';
+import { Bookmark } from '../../model/Bookmark';
+import { TagModel } from '../../model/TagModel';
+import { addBookmark, setBookmarks } from '../../redux/bookmarkReducer';
 import { RootState } from '../../redux/store';
 import { UtilsFunction } from '../../utils';
 import styles from './Article.module.scss';
-import { addBookmark, setBookmarks } from '../../redux/bookmarkReducer';
-import { Bookmark } from '../../model/Bookmark';
-import { TagModel } from '../../model/TagModel';
-import Tag from '../../components/Tag/Tag';
 
 const cx = classNames.bind(styles);
 function ArticleComp() {
@@ -162,6 +163,8 @@ function ArticleComp() {
     fetchAddBookmark();
   };
 
+  const toggleReadingArticle = () => {};
+
   return (
     <>
       {error && (
@@ -227,6 +230,9 @@ function ArticleComp() {
                               display: isBookmarked ? 'inline' : 'none',
                             }}
                           />
+                        </div>
+                        <div className={cx('meta-volume')}>
+                          <VolumeUpIcon onClick={() => toggleReadingArticle()} />
                         </div>
                       </div>
                       <h3 className={cx('title')}>{article.title}</h3>

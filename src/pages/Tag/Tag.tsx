@@ -21,7 +21,7 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 const cx = classNames.bind(styles);
 function Tag() {
   const { id } = useParams();
-  const { handleShowError, handleShowSuccess } = UtilsFunction();
+  const { handleShowError } = UtilsFunction();
   const error = useSelector((state: RootState) => state.error);
   const cookies = new Cookies();
   const token = cookies.get('accessToken');

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ThemeProvider } from '@mui/material';
 import { themeCreator } from './base';
 import { StylesProvider } from '@mui/styles';
 
 export const ThemeContext = React.createContext((themeName: string): void => {});
-
-const ThemeProviderWrapper: React.FC = (props: any) => {
+interface ThemeProviderWrapperProps {
+  children: ReactNode; // Define the children prop
+}
+const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = (props) => {
   const curThemeName = localStorage.getItem('appTheme') || 'PureLightTheme';
   const [themeName, _setThemeName] = useState(curThemeName);
   const theme = themeCreator(themeName);

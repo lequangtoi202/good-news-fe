@@ -7,30 +7,28 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import axios, { AxiosResponse } from 'axios';
+import jwt_decode from 'jwt-decode';
 import * as React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../auth/AuthContext';
 import { API_URL, GOOGLE_CLIENT_ID } from '../../constant';
 import { clearError, setError } from '../../redux/errorReducer';
 import { RootState } from '../../redux/store';
 import { login } from '../../redux/userReducer';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import jwt_decode from 'jwt-decode';
-import { User } from '../../model/User';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" to="https://mui.com/">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -116,18 +114,18 @@ function Login() {
   };
 
   //=========Tạm ngưng chức năng này==========
-  // const responseGoogle = (response: any) => {
-  //   var decoded: any = jwt_decode(response.credential);
-  //   const user = {
-  //     email: decoded.email,
-  //     avatar: decoded.picture,
-  //     fullName: decoded.name,
-  //     username: decoded.email,
-  //   };
-  //   console.log(user);
-  // };
+  const responseGoogle = (response: any) => {
+    var decoded: any = jwt_decode(response.credential);
+    const user = {
+      email: decoded.email,
+      avatar: decoded.picture,
+      fullName: decoded.name,
+      username: decoded.email,
+    };
+    console.log(user);
+  };
 
-  // const handleErrorGoogle = () => {};
+  const handleErrorGoogle = () => {};
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -177,21 +175,17 @@ function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forgot-password" variant="body2">
-                  Forgot password?
-                </Link>
+                <Link to="/forgot-password">Forgot password?</Link>
               </Grid>
               <Grid item>
-                <Link href="/sign-up" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <Link to="/sign-up">{"Don't have an account? Sign Up"}</Link>
               </Grid>
             </Grid>
-            {/* <div style={{ margin: '0 auto' }}>
+            <div style={{ margin: '0 auto' }}>
               <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
                 <GoogleLogin onSuccess={responseGoogle} onError={handleErrorGoogle} />
               </GoogleOAuthProvider>
-            </div> */}
+            </div>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

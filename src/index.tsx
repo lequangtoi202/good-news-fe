@@ -14,11 +14,15 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <GlobalStyles>
-      <AuthProvider>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </AuthProvider>
+      <HelmetProvider>
+        <SidebarProvider>
+          <AuthProvider>
+            <Provider store={store}>
+              <App />
+            </Provider>
+          </AuthProvider>
+        </SidebarProvider>
+      </HelmetProvider>
     </GlobalStyles>
   </React.StrictMode>,
 );

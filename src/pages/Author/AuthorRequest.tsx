@@ -1,28 +1,27 @@
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PendingIcon from '@mui/icons-material/Pending';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import Cookies from 'universal-cookie';
 
 import { API_URL } from '../../constant';
-import Cookies from 'universal-cookie';
 import { Author } from '../../model/Author';
 import { RootState } from '../../redux/store';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import { UtilsFunction } from '../../utils';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const defaultTheme = createTheme();
 
