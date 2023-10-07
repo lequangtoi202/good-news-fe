@@ -4,7 +4,7 @@ import { CssBaseline } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import React, { ReactNode } from 'react';
 import { Fragment } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import DefaultLayout from './layout/DefaultLayout/DefaultLayout';
 import Login from './pages/Login/Login';
@@ -13,9 +13,18 @@ import SignUp from './pages/SignUp/SignUp';
 import { publicRoutes, privateRoutes } from './routes/routes';
 import ThemeProvider from './theme/ThemeProvider';
 import SidebarLayout from './admin/layouts/SidebarLayout';
+import { useAuth } from './auth/AuthContext';
+import { useUser } from './hook';
 type LayoutComponent = React.ComponentType<{ children?: ReactNode }>;
 
 function App() {
+  const { currentUser } = useUser();
+  const ProtectedRoute = ({ children }: { children?: ReactNode }) => {
+    if (!currentUser) {
+      return <Navigate to="/sign-in" />;
+    }
+    return children;
+  };
   return (
     <Router>
       <ThemeProvider>
@@ -62,9 +71,11 @@ function App() {
                     key={index}
                     path={route.path}
                     element={
-                      <Layout>
-                        <Page />
-                      </Layout>
+                      <ProtectedRoute>
+                        <Layout>
+                          <Page />
+                        </Layout>
+                      </ProtectedRoute>
                     }
                   />
                 );

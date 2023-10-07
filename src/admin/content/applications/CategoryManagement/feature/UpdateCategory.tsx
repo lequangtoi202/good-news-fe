@@ -44,10 +44,12 @@ function UpdateCategory() {
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, checked } = e.target;
+
+    const newValue = e.target.type === 'checkbox' ? checked : value;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: newValue,
     }));
   };
 
@@ -56,13 +58,19 @@ function UpdateCategory() {
     const categoryReq = {
       name: formData.name,
       description: formData.description,
-      isActive: formData.active,
+      active: formData.active,
     };
+
+    const payload = new FormData();
+    payload.append('categoryReq', JSON.stringify(categoryReq));
+    if (image !== null) {
+      payload.append('image', image || null);
+    }
     axios
-      .put(API_URL + `categories/${id}`, JSON.stringify(categoryReq), {
+      .put(API_URL + `categories/${id}`, payload, {
         headers: {
-          Authorization: 'Bearer ' + token,
-          'Content-type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-type': 'multipart/form-data',
         },
       })
       .then((res) => {
@@ -110,15 +118,7 @@ function UpdateCategory() {
           onChange={handleChange}
         />
         <FormControlLabel
-          control={
-            <Checkbox
-              value={formData.active}
-              checked={formData.active}
-              onChange={handleChange}
-              name="active"
-              color="primary"
-            />
-          }
+          control={<Checkbox checked={formData.active} onChange={handleChange} name="active" color="primary" />}
           label="Active"
         />
         <Grid item xs={12}>

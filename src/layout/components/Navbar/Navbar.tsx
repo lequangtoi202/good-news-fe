@@ -19,6 +19,8 @@ import { Link } from 'react-router-dom';
 import { RootState } from '../../../redux/store';
 import { useAuth } from '../../../auth/AuthContext';
 import Search from '../../../components/Search';
+import { Modal, Paper } from '@mui/material';
+import ArticleEditor from '../../../components/ArticleEditor/ArticleEditor';
 
 const pages = [
   { page: 'Trang chủ', path: '/' },
@@ -34,6 +36,7 @@ function Navbar() {
   const { currentUser } = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const initialSettings: Setting[] = [];
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const settings: Setting[] = isLoggedIn
@@ -81,6 +84,13 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  const handleShowModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <AppBar
       ref={navbarRef}
@@ -145,6 +155,11 @@ function Navbar() {
                   </Typography>
                 </MenuItem>
               ))}
+              <MenuItem onClick={handleShowModal}>
+                <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
+                  <div>Viết bài</div>
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -211,8 +226,28 @@ function Navbar() {
                   </Typography>
                 </MenuItem>
               ))}
+              <MenuItem onClick={handleShowModal}>
+                <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
+                  <div>Viết bài</div>
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
+          <Modal
+            open={isModalOpen}
+            onClose={handleCloseModal}
+            aria-labelledby="write-article-modal"
+            aria-describedby="write-article-modal-description"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Paper sx={{ padding: 2, width: '80%', maxWidth: 800, height: '80%' }}>
+              <ArticleEditor />
+            </Paper>
+          </Modal>
         </Toolbar>
       </Container>
     </AppBar>

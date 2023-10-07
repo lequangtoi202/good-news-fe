@@ -57,7 +57,7 @@ function UpdateAuthor() {
     axios
       .post(API_URL + 'categories', cateFormData, {
         headers: {
-          Authorization: 'Bearer ' + token,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       })

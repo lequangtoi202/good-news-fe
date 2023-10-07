@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^40.0.0",
+    "@ckeditor/ckeditor5-react": "^6.1.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
@@ -30,6 +32,7 @@
     "apexcharts": "3.35.3",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.2",
+    "ckeditor4-react": "^5.0.0",
     "classnames": "^2.3.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
