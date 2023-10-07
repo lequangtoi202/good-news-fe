@@ -20,39 +20,39 @@ import {
 import axios from 'axios';
 import { ChangeEvent, FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import Cookies from 'universal-cookie';
 import { API_URL } from '../../../../constant';
-import { Category } from '../../../../model/Category';
+import { User } from '../../../../model/User';
 import { deleteAny, resetDeleteStatus } from '../../../../redux/adminReducer';
 import { UtilsFunction } from '../../../../utils';
 import BulkActions from './BulkActions';
 
-interface RecentCategoriesTableProps {
+interface RecentUsersTableProps {
   className?: string;
-  categories: Category[];
+  users: User[];
 }
 
-const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) => {
-  const navigate = useNavigate();
+const RecentUsersTable: FC<RecentUsersTableProps> = ({ users }) => {
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { handleShowError } = UtilsFunction();
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const selectedBulkActions = selectedCategories.length > 0;
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const selectedBulkActions = selectedUsers.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
 
-  const handleSelectAllCategories = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedCategories(event.target.checked ? categories.map((article) => article.id) : []);
+  const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedUsers(event.target.checked ? users.map((user) => user.id) : []);
   };
 
-  const handleSelectOneArticle = (event: ChangeEvent<HTMLInputElement>, articleId: number): void => {
-    if (!selectedCategories.includes(articleId)) {
-      setSelectedCategories((prevSelected) => [...prevSelected, articleId]);
+  const handleSelectOneUser = (event: ChangeEvent<HTMLInputElement>, userId: number): void => {
+    if (!selectedUsers.includes(userId)) {
+      setSelectedUsers((prevSelected) => [...prevSelected, userId]);
     } else {
-      setSelectedCategories((prevSelected) => prevSelected.filter((id) => id !== articleId));
+      setSelectedUsers((prevSelected) => prevSelected.filter((id) => id !== userId));
     }
   };
 
@@ -64,15 +64,14 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
     setLimit(parseInt(event.target.value));
   };
 
-  const handleDeleteCategory = (cateId: number) => {
-    const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa danh mục này không?');
+  const handleDeleteUser = (userId: number) => {
+    const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa user này không?');
     if (confirmDelete) {
       if (token) {
         axios
-          .delete(API_URL + `categories/${cateId}`, {
+          .delete(API_URL + `users/${userId}`, {
             headers: {
-              Authorization: 'Bearer ' + token,
-              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
             },
           })
           .then((res) => {
@@ -89,10 +88,10 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
       }
     }
   };
-
-  const selectedSomeCategories = selectedCategories.length > 0 && selectedCategories.length < categories.length;
-  const selectedAllCategories = selectedCategories.length === categories.length;
+  const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length;
+  const selectedAllUsers = selectedUsers.length === users.length;
   const theme = useTheme();
+
   return (
     <Card>
       {selectedBulkActions && (
@@ -109,57 +108,71 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllCategories}
-                  indeterminate={selectedSomeCategories}
-                  onChange={handleSelectAllCategories}
+                  checked={selectedAllUsers}
+                  indeterminate={selectedSomeUsers}
+                  onChange={handleSelectAllUsers}
                 />
               </TableCell>
-              <TableCell align="center">Category ID</TableCell>
-              <TableCell align="center">Category Name</TableCell>
-              <TableCell align="center">Description</TableCell>
-              <TableCell align="center">Image</TableCell>
-              <TableCell align="center">Active</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>User ID</TableCell>
+              <TableCell>Username</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Full Name</TableCell>
+              <TableCell>Date Of Birth</TableCell>
+              <TableCell>Avatar</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {categories.map((cate) => {
-              const isCategoriesSelected = selectedCategories.includes(cate.id);
+            {users.map((user) => {
+              const isUsersSelected = selectedUsers.includes(user.id);
               return (
-                <TableRow hover key={cate.id} selected={isCategoriesSelected}>
+                <TableRow hover key={user.id} selected={isUsersSelected}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isCategoriesSelected}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) => handleSelectOneArticle(event, cate.id)}
-                      value={isCategoriesSelected}
+                      checked={isUsersSelected}
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => handleSelectOneUser(event, user.id)}
+                      value={isUsersSelected}
                     />
                   </TableCell>
                   <TableCell>
                     <Typography variant="body1" fontWeight="bold" color="text.primary" gutterBottom noWrap>
-                      {cate.id}
+                      {user.id}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1" fontWeight="bold" color="text.primary" gutterBottom noWrap>
-                      {cate.name}
+                    <Typography variant="body1" color="text.primary" gutterBottom noWrap>
+                      {user.username}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" color="text.secondary">
-                      {cate.description}
+                    <Typography variant="body1" color="text.primary" gutterBottom noWrap>
+                      {user.email}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body1" color="text.primary" gutterBottom noWrap>
+                      {user.fullName}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body1" color="text.primary" gutterBottom noWrap>
+                      {user.dateOfBirth}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      <img style={{ width: '120px', height: '80px' }} src={cate.image} alt={cate.name} />
+                      <img style={{ width: '80px', height: '80px' }} src={user.avatar} alt={user.username} />
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Checkbox value={cate.active} checked={cate.active} name="active" color="primary" />
+                    <Typography variant="body1" color="text.primary" gutterBottom noWrap>
+                      {user.address}
+                    </Typography>
                   </TableCell>
                   <TableCell>
-                    <Tooltip title="Edit Category" arrow>
+                    <Tooltip title="Edit User" arrow>
                       <IconButton
                         sx={{
                           '&:hover': {
@@ -169,12 +182,12 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
                         }}
                         color="inherit"
                         size="small"
-                        onClick={() => navigate(`/admin/management/categories/edit/${cate.id}`)}
+                        onClick={() => navigate(`/admin/management/users/edit/${user.id}`)}
                       >
                         <EditTwoToneIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete Category" arrow>
+                    <Tooltip title="Delete User" arrow>
                       <IconButton
                         sx={{
                           '&:hover': { background: theme.colors.error.lighter },
@@ -182,7 +195,7 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
                         }}
                         color="inherit"
                         size="small"
-                        onClick={() => handleDeleteCategory(cate.id)}
+                        onClick={() => handleDeleteUser(user.id)}
                       >
                         <DeleteTwoToneIcon fontSize="small" />
                       </IconButton>
@@ -197,7 +210,7 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
       <Box p={2}>
         <TablePagination
           component="div"
-          count={categories.length}
+          count={users.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -208,4 +221,4 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
     </Card>
   );
 };
-export default RecentCategoriesTable;
+export default RecentUsersTable;

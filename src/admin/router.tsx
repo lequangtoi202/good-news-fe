@@ -13,6 +13,8 @@ export const Crypto = Loader(lazy(() => import('../admin/content/dashboards/Cryp
 
 export const Messenger = Loader(lazy(() => import('../admin/content/applications/Messenger')));
 export const UsersManagement = Loader(lazy(() => import('../admin/content/applications/UserManagement')));
+export const UpdateUser = Loader(lazy(() => import('../admin/content/applications/UserManagement/feature/UpdateUser')));
+
 export const AuthorsManagement = Loader(lazy(() => import('../admin/content/applications/AuthorManagement')));
 export const UpdateAuthor = Loader(
   lazy(() => import('../admin/content/applications/AuthorManagement/feature/UpdateAuthor')),

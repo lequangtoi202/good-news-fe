@@ -75,6 +75,7 @@ function Home() {
               </li>
             ))}
         </ul>
+        <Link to="/admin/management/tags">Vào admin</Link>
         <div className={'container'}>
           <div className={cx('article-wrapper')}>
             <div className={cx('trending-section', 'row')}>

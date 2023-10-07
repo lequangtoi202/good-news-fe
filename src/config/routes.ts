@@ -9,14 +9,17 @@ const routes: { [key: string]: string } = {
   tagDetail: '/tag/:id',
   requestAuthor: '/request-author',
   changePassword: '/change-password',
+  writeArticle: '/write-article',
+
+  //===========ADMIN====================
   adminHome: '/admin',
   dashboard: '/admin/dashboards/crypto',
   messenger: '/admin/dashboards/messenger',
-  //đang làm
   managementArticles: '/admin/management/articles',
   addArticle: '/admin/management/articles/add',
   updateArticle: '/admin/management/articles/edit/:id',
   managementUsers: '/admin/management/users',
+  updateUser: '/admin/management/users/edit/:id',
   managementAuthors: '/admin/management/authors',
   updateAuthor: '/admin/management/authors/edit/:id',
   managementCategories: '/admin/management/categories',
@@ -30,7 +33,7 @@ const routes: { [key: string]: string } = {
   updatePermission: '/admin/management/permissions/edit/:id',
   managementBookmarks: '/admin/management/bookmarks',
   managementNotification: '/admin/management/notifications',
-  //========================
+  //=============DỰ ĐỊNH BỎ===========
   profileDetails: '/admin/management/profile/details',
   profileSettings: '/admin/management/profile/settings',
   componentsButtons: '/admin/components/buttons',

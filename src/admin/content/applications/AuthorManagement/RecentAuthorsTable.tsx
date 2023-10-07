@@ -27,7 +27,8 @@ import { UtilsFunction } from '../../../../utils';
 import { useDispatch } from 'react-redux';
 import { deleteAny, resetDeleteStatus } from '../../../../redux/adminReducer';
 import { useNavigate } from 'react-router-dom';
-
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningIcon from '@mui/icons-material/Warning';
 interface RecentAuthorsTableProps {
   className?: string;
   authors: Author[];
@@ -38,7 +39,7 @@ const RecentAuthorsTable: FC<RecentAuthorsTableProps> = ({ authors }) => {
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const dispatch = useDispatch();
-  const { handleShowError } = UtilsFunction();
+  const { handleShowError, handleShowSuccess } = UtilsFunction();
   const [selectedAuthors, setSelectedAuthors] = useState<number[]>([]);
   const selectedBulkActions = selectedAuthors.length > 0;
   const [page, setPage] = useState<number>(0);
@@ -63,7 +64,33 @@ const RecentAuthorsTable: FC<RecentAuthorsTableProps> = ({ authors }) => {
   const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setLimit(parseInt(event.target.value));
   };
-
+  const handleConfirmAuthor = (authorId: number) => {
+    if (token) {
+      axios
+        .post(
+          API_URL + `authors/${authorId}/confirm`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+        .then((res) => {
+          handleShowSuccess('Thành công');
+          dispatch(deleteAny(true));
+          setTimeout(() => {
+            dispatch(resetDeleteStatus());
+          }, 2000);
+        })
+        .catch((err) => {
+          handleShowError(err.message);
+        });
+    } else {
+      handleShowError('Vui lòng đăng nhập!');
+    }
+  };
   const handleDeleteAuthor = (authorId: number) => {
     const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa quyền này không?');
     if (confirmDelete) {
@@ -182,6 +209,40 @@ const RecentAuthorsTable: FC<RecentAuthorsTableProps> = ({ authors }) => {
                         <DeleteTwoToneIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
+                    {author.confirmed ? (
+                      <Tooltip title="Confirmed" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': {
+                              background: theme.colors.success.lighter,
+                            },
+                            color: theme.palette.success.main,
+                          }}
+                          color="inherit"
+                          size="small"
+                        >
+                          <CheckCircleIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <>
+                        <Tooltip title="Not Confirmed" arrow>
+                          <IconButton
+                            sx={{
+                              '&:hover': {
+                                background: theme.colors.warning.lighter,
+                              },
+                              color: theme.palette.warning.main,
+                            }}
+                            color="inherit"
+                            size="small"
+                            onClick={() => handleConfirmAuthor(author.id)}
+                          >
+                            <WarningIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               );
