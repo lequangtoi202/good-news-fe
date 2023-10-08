@@ -24,9 +24,8 @@ function Search({ isShowButton = false, className }: SearchProps) {
   const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
   const [showResult, setShowResult] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [pageNumber, setPageNumber] = useState<number>(0);
   const debouncedValue = useDebounce<string>(searchValue, 500);
-
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -37,7 +36,7 @@ function Search({ isShowButton = false, className }: SearchProps) {
 
     setLoading(true);
     const fetchApi = async () => {
-      const result = await searchServices.search(debouncedValue.trim(), pageNumber);
+      const result = await searchServices.search(debouncedValue.trim());
       setSearchResult(result);
 
       setLoading(false);
@@ -50,7 +49,7 @@ function Search({ isShowButton = false, className }: SearchProps) {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [debouncedValue, pageNumber]);
+  }, [debouncedValue]);
 
   const handleClear = () => {
     setSearchValue('');
@@ -61,11 +60,7 @@ function Search({ isShowButton = false, className }: SearchProps) {
   const handleHideResult = () => {
     setShowResult(false);
   };
-  const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
-      setPageNumber((prevPageNumber) => prevPageNumber + 1);
-    }
-  };
+  const handleScroll = () => {};
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
     if (!searchValue.startsWith(' ')) {
@@ -78,7 +73,7 @@ function Search({ isShowButton = false, className }: SearchProps) {
         interactive
         visible={showResult && searchResult.length > 0}
         render={(attrs) => (
-          <div className={cx('search-result')} tabIndex={-1} {...attrs}>
+          <div className={cx('search-result')} ref={containerRef} tabIndex={-1} {...attrs} onScroll={handleScroll}>
             <Wrapper>
               {searchResult.map((result) => (
                 <SearchItem key={result.id} data={result} />

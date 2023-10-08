@@ -7,7 +7,7 @@ const Loader = (Component: any) => (props: any) => (
   </Suspense>
 );
 
-export const Crypto = Loader(lazy(() => import('../admin/content/dashboards/Crypto')));
+export const Overview = Loader(lazy(() => import('./content/dashboards/Overview')));
 
 // Applications
 
@@ -46,6 +46,9 @@ export const AddArticle = Loader(
 );
 export const UpdateArticle = Loader(
   lazy(() => import('../admin/content/applications/ArticleManagement/feature/UpdateArticle')),
+);
+export const CrawlData = Loader(
+  lazy(() => import('../admin/content/applications/ArticleManagement/feature/CrawlData')),
 );
 export const UserProfile = Loader(lazy(() => import('../admin/content/applications/Users/profile')));
 export const UserSettings = Loader(lazy(() => import('../admin/content/applications/Users/settings')));

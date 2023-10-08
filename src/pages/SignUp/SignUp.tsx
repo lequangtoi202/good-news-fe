@@ -14,10 +14,13 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { API_URL } from '../../constant';
-import { clearError, setError } from '../../redux/errorReducer';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import { UtilsFunction } from '../../utils';
+import { RootState } from '../../redux/store';
 
 function Copyright(props: any) {
   return (
@@ -35,8 +38,9 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const error = useSelector((state: RootState) => state.error);
   const [userRegistered, setUserRegistered] = useState({});
-  const dispatch = useDispatch();
+  const { handleShowError } = UtilsFunction();
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
@@ -88,10 +92,7 @@ export default function SignUp() {
       setUserRegistered(response.data);
       clearInputData();
     } catch (err) {
-      dispatch(setError('Đăng ký thất bại'));
-      setTimeout(() => {
-        dispatch(clearError());
-      }, 3000);
+      handleShowError('Đăng ký tài khoản không thành công!');
     }
   };
 
@@ -99,6 +100,14 @@ export default function SignUp() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        {error && (
+          <div className="error">
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {error}
+            </Alert>
+          </div>
+        )}
         <Box
           sx={{
             marginTop: 8,
@@ -111,7 +120,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Đăng ký
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -122,7 +131,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="fullName"
-                  label="Full Name"
+                  label="Họ và tên"
                   value={formData.fullName}
                   onChange={handleChange}
                   autoFocus
@@ -133,7 +142,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="username"
-                  label="Username"
+                  label="Tên đăng nhập"
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
@@ -144,7 +153,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Địa chỉ email"
                   name="email"
                   type="email"
                   value={formData.email}
@@ -157,7 +166,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Mật khẩu"
                   type="password"
                   id="password"
                   value={formData.password}
@@ -170,7 +179,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="confirmPassword"
-                  label="Confirm password"
+                  label="Nhập lại mật khẩu"
                   type="password"
                   id="confirmPassword"
                   value={formData.confirmPassword}
@@ -179,6 +188,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <label>Ngày sinh</label>
                 <div>
                   <input type="date" name="dateOfBirth" onChange={handleChange} />
                 </div>
@@ -188,7 +198,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="address"
-                  label="Address"
+                  label="Địa chỉ"
                   id="address"
                   autoComplete="address"
                   value={formData.address}
@@ -211,12 +221,12 @@ export default function SignUp() {
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign Up
+              Đăng ký
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/sign-in" variant="body2">
-                  Already have an account? Sign in
+                  Đã có tài khoản? Đăng nhập
                 </Link>
               </Grid>
             </Grid>

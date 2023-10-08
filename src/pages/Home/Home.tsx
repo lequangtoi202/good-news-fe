@@ -18,6 +18,8 @@ import { RootState } from '../../redux/store';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { useSelector } from 'react-redux';
+import { Author } from '../../model/Author';
+import Cookies from 'universal-cookie';
 
 const cx = classNames.bind(styles);
 
@@ -25,7 +27,10 @@ function Home() {
   const { currentUser } = useAuth();
   const error = useSelector((state: RootState) => state.error);
   const { handleShowError } = UtilsFunction();
+  const cookies = new Cookies();
+  const token = cookies.get('accessToken');
   const [articles, setArticles] = useState<Article[]>([]);
+  const [authorMe, setAuthorMe] = useState<Author | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [visibleArticles, setVisibleArticles] = useState(5);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -36,7 +41,7 @@ function Home() {
         setArticles(response.data);
       })
       .catch(() => {
-        handleShowError('Đã có lỗi xảy ra');
+        handleShowError('Đã xảy ra lỗi!');
       });
     axios
       .get(API_URL + 'categories')
@@ -44,8 +49,22 @@ function Home() {
         setCategories(response.data);
       })
       .catch(() => {
-        handleShowError('Đã có lỗi xảy ra');
+        handleShowError('Đã xảy ra lỗi!');
       });
+    if (token) {
+      axios
+        .get(API_URL + 'authors/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setAuthorMe(response.data);
+        })
+        .catch(() => {
+          handleShowError('Đã xảy ra lỗi!');
+        });
+    }
   }, []);
   const handleScroll = () => {
     if (containerRef.current) {
@@ -75,7 +94,6 @@ function Home() {
               </li>
             ))}
         </ul>
-        <Link to="/admin/management/tags">Vào admin</Link>
         <div className={'container'}>
           <div className={cx('article-wrapper')}>
             <div className={cx('trending-section', 'row')}>
@@ -168,7 +186,11 @@ function Home() {
                       </div>
                       <div className={cx('about-content')}>
                         <h4 className={cx('about-user-title')}>{currentUser?.fullName}</h4>
-                        <span>Author</span>
+                        {authorMe && (
+                          <span>
+                            Tác giả: <strong>{authorMe.authorName}</strong>
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>

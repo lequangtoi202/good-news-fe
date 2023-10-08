@@ -155,7 +155,7 @@ function Footer() {
             <div className="col-lg-6">
               <div className={cx('copyright-text')}>
                 <p>
-                  Copyright By@<span>goodNews</span> - 2023
+                  Copyright By@<span>GoodNews</span> - 2023
                 </p>
               </div>
             </div>

@@ -1,18 +1,38 @@
 import { FC, ReactNode } from 'react';
-import { Box, alpha, lighten, useTheme } from '@mui/material';
+import { Alert, AlertTitle, Box, alpha, lighten, useTheme } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
 interface SidebarLayoutProps {
   children?: ReactNode;
 }
 
 const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
+  const error = useSelector((state: RootState) => state.error);
+  const success = useSelector((state: RootState) => state.success);
   const theme = useTheme();
   return (
     <>
+      {error && (
+        <div className="error">
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {error}
+          </Alert>
+        </div>
+      )}
+      {success && (
+        <div className="success">
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
+            {success}
+          </Alert>
+        </div>
+      )}
       <Box
         sx={{
           flex: 1,

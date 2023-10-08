@@ -12,11 +12,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ label, options, value, onCh
   const handleChange = (event: SelectChangeEvent<string>) => {
     onChange(event.target.value as string);
   };
-
   return (
     <FormControl>
       <InputLabel>{label}</InputLabel>
-      <Select label={label} value={value} onChange={handleChange}>
+      <Select label={label} value={value} style={{ width: '140px' }} onChange={handleChange}>
         {options.map((option, index) => (
           <MenuItem key={index} value={option}>
             {option}

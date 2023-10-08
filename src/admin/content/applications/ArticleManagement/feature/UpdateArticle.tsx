@@ -21,6 +21,7 @@ import { API_URL } from '../../../../../constant';
 import { makeStyles } from '@mui/styles';
 import { IconButton } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
+import { UtilsFunction } from '../../../../../utils';
 
 const textarea = {
   width: '100%',
@@ -34,7 +35,7 @@ const textarea = {
 
 function UpdateArticle() {
   const { id } = useParams();
-  const dispatch = useDispatch();
+  const { handleShowError, handleShowSuccess } = UtilsFunction();
   const navigate = useNavigate();
   const [image, setImage] = useState<File | null>(null);
 
@@ -67,53 +68,6 @@ function UpdateArticle() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const response = await axios.get(`${API_URL}users/by-username?username=`);
-
-      const user = response.data;
-      const loginRequest = {};
-
-      try {
-        const res: AxiosResponse = await axios.post(API_URL + 'auth/login', JSON.stringify(loginRequest), {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const resToken = await res.data;
-        const accessToken = resToken.accessToken;
-        const refreshToken = resToken.refreshToken;
-        document.cookie = `accessToken=${accessToken}; Path=/;`;
-        document.cookie = `refreshToken=${refreshToken}; Path=/;`;
-        const response: AxiosResponse = await axios.get(API_URL + 'users/me', {
-          headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-Type': 'application/json',
-          },
-        });
-        dispatch(clearError());
-        navigate('/');
-      } catch (err: any) {
-        if (err.response.status === 400) {
-          dispatch(setError(err.response.data));
-          setTimeout(() => {
-            dispatch(clearError());
-          }, 3000);
-        }
-        if (err.response.status === 500) {
-          dispatch(setError('Đã có lỗi xảy ra!'));
-          setTimeout(() => {
-            dispatch(clearError());
-          }, 3000);
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      dispatch(setError('Username không đã tồn tại'));
-      setTimeout(() => {
-        dispatch(clearError());
-      }, 3000);
-    }
   };
 
   return (

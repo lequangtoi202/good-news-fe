@@ -33,13 +33,11 @@ function UpdateAuthor() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setFormData({
           authorName: res.data.authorName,
         });
       })
       .catch((err) => {
-        console.log(err);
         handleShowError('Thất bại');
       });
   }, [id]);

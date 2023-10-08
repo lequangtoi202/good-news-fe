@@ -9,11 +9,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { API_URL } from '../../../../../constant';
 import { UtilsFunction } from '../../../../../utils';
+import { resetDeleteStatus } from '../../../../../redux/adminReducer';
+import { useDispatch } from 'react-redux';
 
 function UpdatePermission() {
   const { id } = useParams();
   const { handleShowSuccess, handleShowError } = UtilsFunction();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const [formData, setFormData] = useState({
@@ -32,7 +35,7 @@ function UpdatePermission() {
         handleShowError('Thất bại');
       });
   }, [id]);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -60,6 +63,9 @@ function UpdatePermission() {
       })
       .then((res) => {
         handleShowSuccess('Thành công');
+        setTimeout(() => {
+          dispatch(resetDeleteStatus());
+        }, 2000);
         navigate('/admin/management/permissions');
       })
       .catch((err) => {

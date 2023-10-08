@@ -25,6 +25,7 @@ function CategoryComp() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [articles, setArticles] = useState<{ [key: string]: Article[] }>({}); // Đảm bảo bạn đã định nghĩa kiểu dữ liệu Article
   const [tags, setTags] = useState<TagModel[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,7 +53,7 @@ function CategoryComp() {
   return (
     <>
       {error && (
-        <div className={cx('error')}>
+        <div className="error">
           <Alert severity="error">
             <AlertTitle>Error</AlertTitle>
             {error}
