@@ -76,7 +76,7 @@ function Home() {
   return (
     <>
       {error && (
-        <div className={cx('error')}>
+        <div className="error">
           <Alert severity="error">
             <AlertTitle>Error</AlertTitle>
             {error}

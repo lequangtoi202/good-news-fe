@@ -50,12 +50,30 @@ export default function SignUp() {
     address: '',
     email: '',
   });
-
+  const [isUsernameEmpty, setIsUsernameEmpty] = useState(false);
+  const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
+  const [isEmailEmpty, setIsEmailEmpty] = useState(false);
+  const [isFullNameEmpty, setIsFullNameEmpty] = useState(false);
+  const [isInvalidEmail, setIsInvalidEmail] = useState(false);
   const [avatar, setAvatar] = useState<File | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+    if (name === 'username') {
+      setIsUsernameEmpty(value.trim() === '');
+    }
+    if (name === 'password') {
+      setIsPasswordEmpty(value.trim() === '');
+    }
+    if (name === 'fullName') {
+      setIsFullNameEmpty(value.trim() === '');
+    }
+    if (name === 'email') {
+      setIsEmailEmpty(value.trim() === '');
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      setIsInvalidEmail(!emailPattern.test(value));
+    }
   };
   const clearInputData = () => {
     setFormData({
@@ -71,28 +89,29 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!isUsernameEmpty && !isEmailEmpty && !isPasswordEmpty && !isFullNameEmpty) {
+      const registerRequest = {
+        ...formData,
+      };
 
-    const registerRequest = {
-      ...formData,
-    };
+      const payload = new FormData();
+      payload.append('registerRequest', JSON.stringify(registerRequest));
+      if (avatar !== null) {
+        payload.append('avatar', avatar || null);
+      }
 
-    const payload = new FormData();
-    payload.append('registerRequest', JSON.stringify(registerRequest));
-    if (avatar !== null) {
-      payload.append('avatar', avatar || null);
-    }
+      try {
+        const response = await axios.post(API_URL + 'auth/register', payload, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
 
-    try {
-      const response = await axios.post(API_URL + 'auth/register', payload, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setUserRegistered(response.data);
-      clearInputData();
-    } catch (err) {
-      handleShowError('Đăng ký tài khoản không thành công!');
+        setUserRegistered(response.data);
+        clearInputData();
+      } catch (err) {
+        handleShowError('Đăng ký tài khoản không thành công!');
+      }
     }
   };
 
@@ -134,6 +153,9 @@ export default function SignUp() {
                   label="Họ và tên"
                   value={formData.fullName}
                   onChange={handleChange}
+                  variant="outlined"
+                  error={isFullNameEmpty}
+                  helperText={isFullNameEmpty ? 'Họ và tên không thể trống.' : ''}
                   autoFocus
                 />
               </Grid>
@@ -144,6 +166,9 @@ export default function SignUp() {
                   id="username"
                   label="Tên đăng nhập"
                   name="username"
+                  variant="outlined"
+                  error={isUsernameEmpty}
+                  helperText={isUsernameEmpty ? 'Tên đăng nhập không thể trống.' : ''}
                   value={formData.username}
                   onChange={handleChange}
                 />
@@ -156,6 +181,9 @@ export default function SignUp() {
                   label="Địa chỉ email"
                   name="email"
                   type="email"
+                  variant="outlined"
+                  error={isEmailEmpty || isInvalidEmail}
+                  helperText={isEmailEmpty ? 'Email không thể trống.' : isInvalidEmail ? 'Email không hợp lệ.' : ''}
                   value={formData.email}
                   onChange={handleChange}
                   autoComplete="email"
@@ -169,14 +197,16 @@ export default function SignUp() {
                   label="Mật khẩu"
                   type="password"
                   id="password"
+                  variant="outlined"
+                  error={isPasswordEmpty}
+                  helperText={isPasswordEmpty ? 'Mật khẩu không thể trống.' : ''}
                   value={formData.password}
                   onChange={handleChange}
-                  autoComplete="new-password"
+                  autoComplete="password"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   name="confirmPassword"
                   label="Nhập lại mật khẩu"
@@ -188,14 +218,19 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <label>Ngày sinh</label>
-                <div>
-                  <input type="date" name="dateOfBirth" onChange={handleChange} />
+                <div
+                  style={{
+                    border: '1px solid #c4c4c4',
+                    borderRadius: '5px',
+                    padding: '13px',
+                    width: '100%',
+                  }}
+                >
+                  <input style={{ color: '#666666' }} type="date" name="dateOfBirth" onChange={handleChange} />
                 </div>
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   name="address"
                   label="Địa chỉ"
