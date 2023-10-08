@@ -169,23 +169,6 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
-        <List component="div">
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/admin"
-                  startIcon={<DesignServicesTwoToneIcon />}
-                >
-                  Overview
-                </Button>
-              </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
         <List
           component="div"
           subheader={
@@ -201,10 +184,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/admin/dashboards/crypto"
-                  startIcon={<BrightnessLowTwoToneIcon />}
+                  to="/admin"
+                  startIcon={<DesignServicesTwoToneIcon />}
                 >
-                  Cryptocurrency
+                  Overview
                 </Button>
               </ListItem>
               <ListItem component="div">

@@ -12,12 +12,12 @@ const routes: { [key: string]: string } = {
   writeArticle: '/write-article',
 
   //===========ADMIN====================
-  adminHome: '/admin',
-  dashboard: '/admin/dashboards/crypto',
+  dashboard: '/admin',
   messenger: '/admin/dashboards/messenger',
   managementArticles: '/admin/management/articles',
   addArticle: '/admin/management/articles/add',
   updateArticle: '/admin/management/articles/edit/:id',
+  crawlData: '/admin/management/articles/crawl-data',
   managementUsers: '/admin/management/users',
   updateUser: '/admin/management/users/edit/:id',
   managementAuthors: '/admin/management/authors',

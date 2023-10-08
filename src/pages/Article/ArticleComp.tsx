@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TurnedInNotOutlinedIcon from '@mui/icons-material/TurnedInNotOutlined';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { Avatar, Breadcrumbs, Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -19,7 +19,6 @@ import { API_URL } from '../../constant';
 import MediaCard from '../../layout/components/MediaCard/MediaCard';
 import { Article } from '../../model/Article';
 import { Bookmark } from '../../model/Bookmark';
-import { TagModel } from '../../model/TagModel';
 import { addBookmark, setBookmarks } from '../../redux/bookmarkReducer';
 import { RootState } from '../../redux/store';
 import { UtilsFunction } from '../../utils';
@@ -32,7 +31,6 @@ function ArticleComp() {
   const token = cookies.get('accessToken');
   const bookmarks = useSelector((state: RootState) => state.bookmarks);
   const dispatch = useDispatch();
-  const [tags, setTags] = useState<TagModel[]>([]);
   const articleId = id ? parseInt(id) : null;
   const isBookmarked = bookmarks.some((bookmark) => bookmark?.article?.id === articleId);
   const error = useSelector((state: RootState) => state.error);
@@ -46,7 +44,7 @@ function ArticleComp() {
       const apiTimeoutId = setTimeout(() => {
         axios
           .post(
-            API_URL + `articles/${id}/user-acticles`,
+            API_URL + `articles/${id}/user-articles`,
             {},
             {
               headers: {
@@ -68,17 +66,15 @@ function ArticleComp() {
   }, []);
   useEffect(() => {
     const fetchBookmarks = async () => {
-      if (token !== null) {
-        try {
-          const response = await axios.get(API_URL + 'bookmarks/me', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          dispatch(setBookmarks(response.data));
-        } catch (error) {
-          handleShowError('Đã xảy ra lỗi');
-        }
+      try {
+        const response = await axios.get(API_URL + 'bookmarks/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        dispatch(setBookmarks(response.data));
+      } catch (error) {
+        handleShowError('Đã xảy ra lỗi');
       }
     };
     if (token) {
@@ -163,8 +159,6 @@ function ArticleComp() {
     fetchAddBookmark();
   };
 
-  const toggleReadingArticle = () => {};
-
   return (
     <>
       {error && (
@@ -230,9 +224,6 @@ function ArticleComp() {
                               display: isBookmarked ? 'inline' : 'none',
                             }}
                           />
-                        </div>
-                        <div className={cx('meta-volume')}>
-                          <VolumeUpIcon onClick={() => toggleReadingArticle()} />
                         </div>
                       </div>
                       <h3 className={cx('title')}>{article.title}</h3>

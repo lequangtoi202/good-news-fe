@@ -16,20 +16,22 @@ import jwt_decode from 'jwt-decode';
 import * as React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { useAuth } from '../../auth/AuthContext';
 import { API_URL, GOOGLE_CLIENT_ID } from '../../constant';
-import { clearError, setError } from '../../redux/errorReducer';
 import { RootState } from '../../redux/store';
 import { login } from '../../redux/userReducer';
+import { UtilsFunction } from '../../utils';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" to="https://mui.com/">
-        Your Website
+        GoodNews
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -42,8 +44,10 @@ const defaultTheme = createTheme();
 function Login() {
   const error = useSelector((state: RootState) => state.error);
   const { setCurrentUser } = useAuth();
+  const { handleShowError } = UtilsFunction();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -56,6 +60,7 @@ function Login() {
       [name]: value,
     }));
   };
+  const next = new URLSearchParams(location.search).get('next');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -88,28 +93,17 @@ function Login() {
         });
         setCurrentUser(response.data);
         dispatch(login({ payload: { userInfo: resToken.accessToken } }));
-        dispatch(clearError());
-        navigate('/');
+        navigate(next || '/');
       } catch (err: any) {
         if (err.response.status === 400) {
-          dispatch(setError(err.response.data));
-          setTimeout(() => {
-            dispatch(clearError());
-          }, 3000);
+          handleShowError('Tài khoản hoặc mật khẩu không đúng!');
         }
         if (err.response.status === 500) {
-          dispatch(setError('Đã có lỗi xảy ra!'));
-          setTimeout(() => {
-            dispatch(clearError());
-          }, 3000);
+          handleShowError('Đã xảy ra lỗi!');
         }
       }
     } catch (err) {
-      console.log(err);
-      dispatch(setError('Username không đã tồn tại'));
-      setTimeout(() => {
-        dispatch(clearError());
-      }, 3000);
+      handleShowError('Đã xảy ra lỗi!');
     }
   };
 
@@ -130,6 +124,14 @@ function Login() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        {error && (
+          <div className="error">
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {error}
+            </Alert>
+          </div>
+        )}
         <Box
           sx={{
             marginTop: 8,
@@ -142,7 +144,7 @@ function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Đăng nhập
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -150,7 +152,7 @@ function Login() {
               required
               fullWidth
               id="username"
-              label="Username"
+              label="Tên đăng nhập"
               name="username"
               autoFocus
               value={formData.username}
@@ -161,23 +163,23 @@ function Login() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Mật khẩu"
               type="password"
               id="password"
               autoComplete="current-password"
               value={formData.password}
               onChange={handleChange}
             />
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Lưu đăng nhập" />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign In
+              Đăng nhập
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/forgot-password">Forgot password?</Link>
+                <Link to="/forgot-password">Quên mật khẩu?</Link>
               </Grid>
               <Grid item>
-                <Link to="/sign-up">{"Don't have an account? Sign Up"}</Link>
+                <Link to="/sign-up">{'Chưa có tài khoản? Đăng ký'}</Link>
               </Grid>
             </Grid>
             <div style={{ margin: '0 auto' }}>

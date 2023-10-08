@@ -2,18 +2,17 @@ import { Helmet } from 'react-helmet-async';
 import PageHeader from './PageHeader';
 import { Container, Grid } from '@mui/material';
 
-import AccountBalance from './AccountBalance';
-import Wallets from './Wallets';
-import AccountSecurity from './AccountSecurity';
 import WatchList from './WatchList';
 import PageTitleWrapper from '../../../../components/PageTitleWrapper';
 import Footer from '../../../../components/Footer';
+import UserStatistic from './UserStatistic';
+import Hot from './Hot';
 
-function DashboardCrypto() {
+function DashboardOverview() {
   return (
     <>
       <Helmet>
-        <title>Crypto Dashboard</title>
+        <title>Overview</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />
@@ -21,13 +20,10 @@ function DashboardCrypto() {
       <Container maxWidth="lg">
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={4}>
           <Grid item xs={12}>
-            <AccountBalance />
+            <UserStatistic />
           </Grid>
-          <Grid item lg={8} xs={12}>
-            <Wallets />
-          </Grid>
-          <Grid item lg={4} xs={12}>
-            <AccountSecurity />
+          <Grid item xs={12}>
+            <Hot />
           </Grid>
           <Grid item xs={12}>
             <WatchList />
@@ -39,4 +35,4 @@ function DashboardCrypto() {
   );
 }
 
-export default DashboardCrypto;
+export default DashboardOverview;

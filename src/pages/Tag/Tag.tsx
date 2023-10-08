@@ -21,8 +21,9 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 const cx = classNames.bind(styles);
 function Tag() {
   const { id } = useParams();
-  const { handleShowError } = UtilsFunction();
+  const { handleShowError, handleShowSuccess } = UtilsFunction();
   const error = useSelector((state: RootState) => state.error);
+  const success = useSelector((state: RootState) => state.success);
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const [tag, setTag] = useState<TagModel | null>(null);
@@ -39,7 +40,7 @@ function Tag() {
         const followStatusRes = await axios.get(API_URL + `tags/${id}/articles`);
         setIsFollow(followStatusRes.data);
       } catch (error) {
-        handleShowError('Đã có lỗi xảy ra khi lấy dữ liệu.');
+        handleShowError('Đã xảy ra lỗi!');
       }
     };
     fetchData();
@@ -58,19 +59,29 @@ function Tag() {
             },
           },
         )
-        .then((res) => setIsFollow(res.data.active))
+        .then((res) => {
+          setIsFollow(res.data.active);
+          handleShowSuccess('Thành công');
+        })
         .catch((err) => handleShowError('Đã xảy ra lỗi.'));
     } else {
-      handleShowError('Vui lòng đăng nhập');
+      handleShowError('Vui lòng đăng nhập!');
     }
   };
-  console.log(isFollow);
   return (
     <>
       {error && (
         <div className={cx('error')}>
           <Alert severity="error">
             <AlertTitle>Error</AlertTitle>
+            {error}
+          </Alert>
+        </div>
+      )}
+      {success && (
+        <div className="success">
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
             {error}
           </Alert>
         </div>

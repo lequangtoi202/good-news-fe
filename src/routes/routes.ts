@@ -22,11 +22,12 @@ import {
   Buttons,
   Cards,
   CategoriesManagement,
-  Crypto,
+  CrawlData,
   Forms,
   Messenger,
   Modals,
   NotificationManagement,
+  Overview,
   PermissionManagement,
   Tabs,
   TagsManagement,
@@ -54,11 +55,12 @@ const publicRoutes: any = [
 ];
 
 const privateRoutes = [
-  { path: config.routes.dashboard, component: Crypto, layout: SidebarLayout },
+  { path: config.routes.dashboard, component: Overview, layout: SidebarLayout },
   { path: config.routes.messenger, component: Messenger, layout: SidebarLayout },
   { path: config.routes.managementArticles, component: ArticleManagement, layout: SidebarLayout },
   { path: config.routes.addArticle, component: AddArticle, layout: SidebarLayout },
   { path: config.routes.updateArticle, component: UpdateArticle, layout: SidebarLayout },
+  { path: config.routes.crawlData, component: CrawlData, layout: SidebarLayout },
   { path: config.routes.managementUsers, component: UsersManagement, layout: SidebarLayout },
   { path: config.routes.updateUser, component: UpdateUser, layout: SidebarLayout },
   { path: config.routes.managementAuthors, component: AuthorsManagement, layout: SidebarLayout },

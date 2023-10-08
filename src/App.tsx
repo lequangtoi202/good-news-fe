@@ -13,24 +13,24 @@ import SignUp from './pages/SignUp/SignUp';
 import { publicRoutes, privateRoutes } from './routes/routes';
 import ThemeProvider from './theme/ThemeProvider';
 import SidebarLayout from './admin/layouts/SidebarLayout';
-import { useAuth } from './auth/AuthContext';
 import { useUser } from './hook';
 type LayoutComponent = React.ComponentType<{ children?: ReactNode }>;
 
 function App() {
   const { currentUser } = useUser();
-  const ProtectedRoute = ({ children }: { children?: ReactNode }) => {
+
+  const ProtectedRoute = ({ children, path }: { children?: ReactNode; path: string }) => {
     if (!currentUser) {
-      return <Navigate to="/sign-in" />;
+      return <Navigate to={`/sign-in?next=${encodeURIComponent(path)}`} />;
     }
     return children;
   };
+
   return (
     <Router>
       <ThemeProvider>
         <LocalizationProvider>
           <CssBaseline />
-
           <div className="App">
             <Routes>
               {publicRoutes.map((route: any, index: number) => {
@@ -71,7 +71,7 @@ function App() {
                     key={index}
                     path={route.path}
                     element={
-                      <ProtectedRoute>
+                      <ProtectedRoute path={'/admin'}>
                         <Layout>
                           <Page />
                         </Layout>
