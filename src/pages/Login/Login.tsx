@@ -48,6 +48,9 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [isUsernameEmpty, setIsUsernameEmpty] = useState(false);
+  const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -59,6 +62,11 @@ function Login() {
       ...prevFormData,
       [name]: value,
     }));
+    if (name === 'username') {
+      setIsUsernameEmpty(value.trim() === '');
+    } else if (name === 'password') {
+      setIsPasswordEmpty(value.trim() === '');
+    }
   };
   const next = new URLSearchParams(location.search).get('next');
 
@@ -156,6 +164,9 @@ function Login() {
               name="username"
               autoFocus
               value={formData.username}
+              variant="outlined"
+              error={isUsernameEmpty}
+              helperText={isUsernameEmpty ? 'Tên đăng nhập không thể trống.' : ''}
               onChange={handleChange}
             />
             <TextField
@@ -168,6 +179,9 @@ function Login() {
               id="password"
               autoComplete="current-password"
               value={formData.password}
+              error={isPasswordEmpty}
+              variant="outlined"
+              helperText={isPasswordEmpty ? 'Mật khẩu không thể trống.' : ''}
               onChange={handleChange}
             />
             <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Lưu đăng nhập" />
