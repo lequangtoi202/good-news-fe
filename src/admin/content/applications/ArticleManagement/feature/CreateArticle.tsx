@@ -113,7 +113,13 @@ function CreateArticle() {
           value={formData.source}
           onChange={handleChange}
         />
-        <CustomSelect label="Select an option" options={options} value={selectedOption} onChange={handleSelectChange} />
+        <CustomSelect
+          text={options}
+          label="Select an option"
+          options={options}
+          value={selectedOption}
+          onChange={handleSelectChange}
+        />
         <MultiSelect
           label="Select Options"
           options={['Option 1', 'Option 2', 'Option 5']}

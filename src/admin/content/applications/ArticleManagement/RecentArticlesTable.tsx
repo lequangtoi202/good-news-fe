@@ -30,9 +30,19 @@ import { deleteAny } from '../../../../redux/adminReducer';
 interface RecentArticlesTableProps {
   className?: string;
   articles: Article[];
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (newPage: number) => void;
+  onLimitChange: (newLimit: number) => void;
 }
 
-const RecentArticlesTable: FC<RecentArticlesTableProps> = ({ articles }) => {
+const RecentArticlesTable: FC<RecentArticlesTableProps> = ({
+  articles,
+  totalPages,
+  totalElements,
+  onPageChange,
+  onLimitChange,
+}) => {
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const dispatch = useDispatch();
@@ -56,10 +66,13 @@ const RecentArticlesTable: FC<RecentArticlesTableProps> = ({ articles }) => {
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
+    onPageChange(newPage);
   };
 
   const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
+    const newLimit = parseInt(event.target.value);
+    setLimit(newLimit);
+    onLimitChange(newLimit);
   };
 
   const handleDeleteArticle = (articleId: number) => {
@@ -147,8 +160,17 @@ const RecentArticlesTable: FC<RecentArticlesTableProps> = ({ articles }) => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      <img src={article.image} alt={article.authors.authorName} />
+                    <Typography
+                      style={{ width: '240px', height: '160px' }}
+                      variant="body2"
+                      color="text.secondary"
+                      noWrap
+                    >
+                      <img
+                        style={{ width: '100%', height: '100%' }}
+                        src={article.image}
+                        alt={article.authors.authorName}
+                      />
                     </Typography>
                   </TableCell>
 
@@ -195,7 +217,7 @@ const RecentArticlesTable: FC<RecentArticlesTableProps> = ({ articles }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={articles.length}
+          count={totalElements}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

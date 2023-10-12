@@ -31,9 +31,19 @@ import BulkActions from './BulkActions';
 interface RecentCategoriesTableProps {
   className?: string;
   categories: Category[];
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (newPage: number) => void;
+  onLimitChange: (newLimit: number) => void;
 }
 
-const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) => {
+const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({
+  categories,
+  totalPages,
+  totalElements,
+  onPageChange,
+  onLimitChange,
+}) => {
   const navigate = useNavigate();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
@@ -58,10 +68,13 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
+    onPageChange(newPage);
   };
 
   const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
+    const newLimit = parseInt(event.target.value);
+    setLimit(newLimit);
+    onLimitChange(newLimit);
   };
 
   const handleDeleteCategory = (cateId: number) => {
@@ -151,8 +164,13 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      <img style={{ width: '120px', height: '80px' }} src={cate.image} alt={cate.name} />
+                    <Typography
+                      style={{ width: '160px', height: '100px' }}
+                      variant="body2"
+                      color="text.secondary"
+                      noWrap
+                    >
+                      <img style={{ width: '100%', height: '100%' }} src={cate.image} alt={cate.name} />
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -197,7 +215,7 @@ const RecentCategoriesTable: FC<RecentCategoriesTableProps> = ({ categories }) =
       <Box p={2}>
         <TablePagination
           component="div"
-          count={categories.length}
+          count={totalElements}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

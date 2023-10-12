@@ -188,7 +188,7 @@ function Home() {
                         <h4 className={cx('about-user-title')}>{currentUser?.fullName}</h4>
                         {authorMe && (
                           <span>
-                            Tác giả: <strong>{authorMe.authorName}</strong>
+                            <strong>Tác giả:</strong> {authorMe.authorName}
                           </span>
                         )}
                       </div>

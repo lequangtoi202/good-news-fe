@@ -29,9 +29,19 @@ import BulkActions from './BulkActions';
 interface RecentBookmarksTableProps {
   className?: string;
   bookmarks: Bookmark[];
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (newPage: number) => void;
+  onLimitChange: (newLimit: number) => void;
 }
 
-const RecentBookmarksTable: FC<RecentBookmarksTableProps> = ({ bookmarks }) => {
+const RecentBookmarksTable: FC<RecentBookmarksTableProps> = ({
+  bookmarks,
+  totalPages,
+  totalElements,
+  onPageChange,
+  onLimitChange,
+}) => {
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const dispatch = useDispatch();
@@ -55,10 +65,13 @@ const RecentBookmarksTable: FC<RecentBookmarksTableProps> = ({ bookmarks }) => {
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
+    onPageChange(newPage);
   };
 
   const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
+    const newLimit = parseInt(event.target.value);
+    setLimit(newLimit);
+    onLimitChange(newLimit);
   };
 
   const handleDeleteBookmark = (bookmarkId: number) => {
@@ -176,7 +189,7 @@ const RecentBookmarksTable: FC<RecentBookmarksTableProps> = ({ bookmarks }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={bookmarks.length}
+          count={totalElements}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

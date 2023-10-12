@@ -31,9 +31,19 @@ import BulkActions from './BulkActions';
 interface RecentUsersTableProps {
   className?: string;
   users: User[];
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (newPage: number) => void;
+  onLimitChange: (newLimit: number) => void;
 }
 
-const RecentUsersTable: FC<RecentUsersTableProps> = ({ users }) => {
+const RecentUsersTable: FC<RecentUsersTableProps> = ({
+  users,
+  totalPages,
+  totalElements,
+  onPageChange,
+  onLimitChange,
+}) => {
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const dispatch = useDispatch();
@@ -58,10 +68,13 @@ const RecentUsersTable: FC<RecentUsersTableProps> = ({ users }) => {
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
+    onPageChange(newPage);
   };
 
   const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
+    const newLimit = parseInt(event.target.value);
+    setLimit(newLimit);
+    onLimitChange(newLimit);
   };
 
   const handleDeleteUser = (userId: number) => {
@@ -210,7 +223,7 @@ const RecentUsersTable: FC<RecentUsersTableProps> = ({ users }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={totalElements}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

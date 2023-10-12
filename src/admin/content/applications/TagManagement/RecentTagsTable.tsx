@@ -31,8 +31,18 @@ import { useNavigate } from 'react-router-dom';
 interface RecentTagsTableProps {
   className?: string;
   tags: TagModel[];
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (newPage: number) => void;
+  onLimitChange: (newLimit: number) => void;
 }
-const RecentTagsTable: FC<RecentTagsTableProps> = ({ tags }) => {
+const RecentTagsTable: FC<RecentTagsTableProps> = ({
+  tags,
+  totalPages,
+  totalElements,
+  onPageChange,
+  onLimitChange,
+}) => {
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const dispatch = useDispatch();
@@ -57,10 +67,13 @@ const RecentTagsTable: FC<RecentTagsTableProps> = ({ tags }) => {
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
+    onPageChange(newPage);
   };
 
   const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
+    const newLimit = parseInt(event.target.value);
+    setLimit(newLimit);
+    onLimitChange(newLimit);
   };
 
   const handleDeleteTag = (tagId: number) => {
@@ -179,7 +192,7 @@ const RecentTagsTable: FC<RecentTagsTableProps> = ({ tags }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={tags.length}
+          count={totalElements}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

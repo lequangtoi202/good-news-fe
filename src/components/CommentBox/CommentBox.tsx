@@ -103,7 +103,7 @@ function CommentBox({ article }: CommentBoxProps) {
 
   const handleDeleteComment = (commentId: number) => {
     axios
-      .delete(API_URL + `articles/${article.id}/comments/${commentId}`, {
+      .delete(API_URL + `comments/${commentId}`, {
         headers: {
           Authorization: 'Bearer ' + token,
         },

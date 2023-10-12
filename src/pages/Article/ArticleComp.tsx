@@ -229,7 +229,7 @@ function ArticleComp() {
                       <h3 className={cx('title')}>{article.title}</h3>
                       <div className={cx('meta-author')}>
                         <div className={cx('auhtor')}>
-                          <Avatar alt="Remy Sharp" src={article.authors.user.avatar} />
+                          <Avatar style={{ textAlign: 'center' }} alt="Remy Sharp" src={article.authors.user.avatar} />
                           <span>
                             By <span>{article.authors.authorName}</span>
                           </span>

@@ -31,9 +31,19 @@ import { useNavigate } from 'react-router-dom';
 interface RecentPermissionsTableProps {
   className?: string;
   permissions: Permission[];
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (newPage: number) => void;
+  onLimitChange: (newLimit: number) => void;
 }
 
-const RecentPermissionsTable: FC<RecentPermissionsTableProps> = ({ permissions }) => {
+const RecentPermissionsTable: FC<RecentPermissionsTableProps> = ({
+  permissions,
+  totalPages,
+  totalElements,
+  onPageChange,
+  onLimitChange,
+}) => {
   const navigate = useNavigate();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
@@ -58,10 +68,13 @@ const RecentPermissionsTable: FC<RecentPermissionsTableProps> = ({ permissions }
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
+    onPageChange(newPage);
   };
 
   const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setLimit(parseInt(event.target.value));
+    const newLimit = parseInt(event.target.value);
+    setLimit(newLimit);
+    onLimitChange(newLimit);
   };
 
   const handleDeleteRole = (roleId: number) => {
@@ -183,7 +196,7 @@ const RecentPermissionsTable: FC<RecentPermissionsTableProps> = ({ permissions }
       <Box p={2}>
         <TablePagination
           component="div"
-          count={Permissions.length}
+          count={totalElements}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}

@@ -21,6 +21,11 @@ import { useAuth } from '../../../auth/AuthContext';
 import Search from '../../../components/Search';
 import { Modal, Paper } from '@mui/material';
 import ArticleEditor from '../../../components/ArticleEditor/ArticleEditor';
+import { Author } from '../../../model/Author';
+import Cookies from 'universal-cookie';
+import axios from 'axios';
+import { API_URL } from '../../../constant';
+import { UtilsFunction } from '../../../utils';
 
 const pages = [
   { page: 'Trang chủ', path: '/' },
@@ -34,6 +39,10 @@ type Setting = {
 
 function Navbar() {
   const { currentUser } = useAuth();
+  const [authorMe, setAuthorMe] = useState<Author | null>(null);
+  const cookies = new Cookies();
+  const { handleShowError } = UtilsFunction();
+  const token = cookies.get('accessToken');
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,7 +73,20 @@ function Navbar() {
     };
 
     window.addEventListener('scroll', handleScroll);
-
+    if (token) {
+      axios
+        .get(API_URL + 'authors/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setAuthorMe(response.data);
+        })
+        .catch(() => {
+          handleShowError('Đã xảy ra lỗi!');
+        });
+    }
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -226,11 +248,13 @@ function Navbar() {
                   </Typography>
                 </MenuItem>
               ))}
-              <MenuItem onClick={handleShowModal}>
-                <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
-                  <div>Viết bài</div>
-                </Typography>
-              </MenuItem>
+              {authorMe && (
+                <MenuItem onClick={handleShowModal}>
+                  <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
+                    <div>Viết bài</div>
+                  </Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
           <Modal

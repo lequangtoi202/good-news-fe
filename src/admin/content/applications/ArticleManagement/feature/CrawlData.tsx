@@ -16,26 +16,51 @@ function CrawlData() {
   const token = cookies.get('accessToken');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>('VnExpress');
+  const [selectedCateOption, setSelectedCateOption] = useState<string>('kinh-doanh');
   const options = ['VnExpress', 'Tuổi trẻ', 'Pháp luật'];
-
+  const cateOptions = [
+    'bat-dong-san',
+    'kinh-doanh',
+    'khoa-hoc',
+    'giai-tri',
+    'the-thao',
+    'phap-luat',
+    'giao-duc',
+    'suc-khoe',
+    'doi-song',
+    'du-lich',
+  ];
+  const categoryLabels = [
+    'Bất động sản',
+    'Kinh doanh',
+    'Khoa học',
+    'Giải trí',
+    'Thể thao',
+    'Pháp luật',
+    'Giáo dục',
+    'Sức khỏe',
+    'Đời sống',
+    'Du lịch',
+  ];
   const handleSelectChange = (value: string) => {
     setSelectedOption(value);
   };
+  const handleSelectCateChange = (value: string) => {
+    setSelectedCateOption(value);
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('submitted');
     if (selectedOption === 'VnExpress') {
       setIsLoading(true);
+      const formData = new FormData();
+      formData.append('category', selectedCateOption);
       try {
-        const response = await axios.post(
-          API_URL + '/crawl-articles-vnExpress',
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const response = await axios.post(API_URL + 'crawl-articles-vnExpress', formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
           },
-        );
+        });
         if (response.status === 200) handleShowSuccess('Thành công!');
       } catch (error) {
         handleShowError('Cào dữ liệu không thành công!');
@@ -60,7 +85,20 @@ function CrawlData() {
         className="d-flex"
         style={{ alignItems: 'center' }}
       >
-        <CustomSelect label="Chọn nguồn" options={options} value={selectedOption} onChange={handleSelectChange} />
+        <CustomSelect
+          label="Chọn nguồn"
+          text={options}
+          options={options}
+          value={selectedOption}
+          onChange={handleSelectChange}
+        />
+        <CustomSelect
+          label="Chọn danh mục"
+          options={cateOptions}
+          text={categoryLabels}
+          value={selectedCateOption}
+          onChange={handleSelectCateChange}
+        />
         <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2, ml: 3 }}>
           Crawl data
         </Button>

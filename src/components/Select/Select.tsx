@@ -3,22 +3,27 @@ import { FormControl, MenuItem, Select, InputLabel, SelectChangeEvent } from '@m
 
 interface CustomSelectProps {
   label: string;
+  text: string[];
   options: string[];
   value: string;
   onChange: (value: string) => void;
 }
 
-const CustomSelect: React.FC<CustomSelectProps> = ({ label, options, value, onChange }) => {
+const CustomSelect: React.FC<CustomSelectProps> = ({ label, text, options, value, onChange }) => {
   const handleChange = (event: SelectChangeEvent<string>) => {
     onChange(event.target.value as string);
   };
   return (
-    <FormControl>
+    <FormControl
+      sx={{
+        mr: 2,
+      }}
+    >
       <InputLabel>{label}</InputLabel>
       <Select label={label} value={value} style={{ width: '140px' }} onChange={handleChange}>
         {options.map((option, index) => (
           <MenuItem key={index} value={option}>
-            {option}
+            {text[index]}
           </MenuItem>
         ))}
       </Select>

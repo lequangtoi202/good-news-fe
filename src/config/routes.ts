@@ -9,6 +9,8 @@ const routes: { [key: string]: string } = {
   tagDetail: '/tag/:id',
   requestAuthor: '/request-author',
   changePassword: '/change-password',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
   writeArticle: '/write-article',
 
   //===========ADMIN====================

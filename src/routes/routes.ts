@@ -43,6 +43,8 @@ import {
   UsersManagement,
 } from '../admin/router';
 import SidebarLayout from '../admin/layouts/SidebarLayout';
+import ForgotPassword from '../pages/ForgotPassword/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword/ResetPassword';
 //Public routes
 const publicRoutes: any = [
   { path: config.routes.home, component: Home, layout: DefaultLayout },
@@ -52,6 +54,8 @@ const publicRoutes: any = [
   { path: config.routes.bookmark, component: BookmarkComp, layout: DefaultLayout },
   { path: config.routes.requestAuthor, component: AuthorRequest, layout: DefaultLayout },
   { path: config.routes.tagDetail, component: Tag, layout: DefaultLayout },
+  { path: config.routes.forgotPassword, component: ForgotPassword, layout: DefaultLayout },
+  { path: config.routes.resetPassword, component: ResetPassword, layout: DefaultLayout },
 ];
 
 const privateRoutes = [
