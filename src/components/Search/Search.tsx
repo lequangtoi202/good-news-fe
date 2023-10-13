@@ -68,7 +68,7 @@ function Search({ isShowButton = false, className }: SearchProps) {
     }
   };
   return (
-    <div>
+    <div className={cx('search-container')}>
       <HeadlessTippy
         interactive
         visible={showResult && searchResult.length > 0}

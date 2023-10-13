@@ -1,4 +1,3 @@
-import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
@@ -16,15 +15,16 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { RootState } from '../../../redux/store';
-import { useAuth } from '../../../auth/AuthContext';
-import Search from '../../../components/Search';
 import { Modal, Paper } from '@mui/material';
-import ArticleEditor from '../../../components/ArticleEditor/ArticleEditor';
-import { Author } from '../../../model/Author';
-import Cookies from 'universal-cookie';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
+import images from '../../../assets/images';
+import { useAuth } from '../../../auth/AuthContext';
+import ArticleEditor from '../../../components/ArticleEditor/ArticleEditor';
+import Search from '../../../components/Search';
 import { API_URL } from '../../../constant';
+import { Author } from '../../../model/Author';
+import { RootState } from '../../../redux/store';
 import { UtilsFunction } from '../../../utils';
 
 const pages = [
@@ -114,167 +114,170 @@ function Navbar() {
     setIsModalOpen(false);
   };
   return (
-    <AppBar
-      ref={navbarRef}
-      style={{ transition: 'all 0.3s ease' }}
-      position={isNavbarFixed === true ? 'fixed' : 'static'}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h3"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              fontSize: '24px',
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            <Link style={{ color: 'white' }} to={'/'}>
-              LOGO
-            </Link>
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+    <>
+      <Toolbar id="back-to-top-anchor" />
+      <AppBar
+        ref={navbarRef}
+        style={{ transition: 'all 0.3s ease' }}
+        position={isNavbarFixed === true ? 'fixed' : 'static'}
+      >
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <Typography
+              variant="h3"
+              noWrap
               sx={{
-                display: { xs: 'block', md: 'none' },
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                fontSize: '24px',
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
-              {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center" variant="h5" sx={{ fontSize: '16px' }}>
-                    <Link to={page.path}>{page.page}</Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-              <MenuItem onClick={handleShowModal}>
-                <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
-                  <div>Viết bài</div>
-                </Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h3"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              fontSize: '12px',
-              textDecoration: 'none',
-            }}
-          >
-            <Link style={{ color: 'white' }} to={'/'}>
-              LOGO
-            </Link>
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page, index) => (
-              <Button
-                key={index}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', fontSize: '18px' }}
-              >
-                <Link style={{ color: 'white' }} to={page.path}>
-                  {page.page}
-                </Link>
-              </Button>
-            ))}
-          </Box>
-          <Search />
+              <Link style={{ color: 'white' }} to={'/'}>
+                <Avatar style={{ width: '130px', height: '80px' }} src={images.logo} />
+              </Link>
+            </Typography>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Quang" src={currentUser?.avatar} />
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
               </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                {pages.map((page, index) => (
+                  <MenuItem key={index} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center" variant="h6" sx={{ fontSize: '16px' }}>
+                      <Link to={page.path}>{page.page}</Link>
+                    </Typography>
+                  </MenuItem>
+                ))}
+                {authorMe && (
+                  <MenuItem onClick={handleShowModal}>
+                    <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
+                      <div>Viết bài</div>
+                    </Typography>
+                  </MenuItem>
+                )}
+              </Menu>
+            </Box>
+            <Typography
+              variant="h3"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                fontSize: '12px',
+                textDecoration: 'none',
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
-              {settings.map((setting, index) => (
-                <MenuItem key={index} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px' }}>
-                    <Link to={setting.path}>{setting.page}</Link>
-                  </Typography>
-                </MenuItem>
+              <Link style={{ color: 'white' }} to={'/'}>
+                <Avatar style={{ width: '120px', height: '60px' }} src={images.logo} />
+              </Link>
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page, index) => (
+                <Button
+                  key={index}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block', fontSize: '18px' }}
+                >
+                  <Link style={{ color: 'white' }} to={page.path}>
+                    {page.page}
+                  </Link>
+                </Button>
               ))}
-              {authorMe && (
-                <MenuItem onClick={handleShowModal}>
-                  <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
-                    <div>Viết bài</div>
-                  </Typography>
-                </MenuItem>
-              )}
-            </Menu>
-          </Box>
-          <Modal
-            open={isModalOpen}
-            onClose={handleCloseModal}
-            aria-labelledby="write-article-modal"
-            aria-describedby="write-article-modal-description"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Paper sx={{ padding: 2, width: '80%', maxWidth: 800, height: '80%' }}>
-              <ArticleEditor />
-            </Paper>
-          </Modal>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            </Box>
+            <Search />
+
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Quang" src={currentUser?.avatar} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting, index) => (
+                  <MenuItem key={index} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px' }}>
+                      <Link to={setting.path}>{setting.page}</Link>
+                    </Typography>
+                  </MenuItem>
+                ))}
+                {authorMe && (
+                  <MenuItem onClick={handleShowModal}>
+                    <Typography textAlign="center" variant="h6" sx={{ fontSize: '14px', color: '#000' }}>
+                      <div>Viết bài</div>
+                    </Typography>
+                  </MenuItem>
+                )}
+              </Menu>
+            </Box>
+            <Modal
+              open={isModalOpen}
+              onClose={handleCloseModal}
+              aria-labelledby="write-article-modal"
+              aria-describedby="write-article-modal-description"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Paper sx={{ padding: 2, width: '80%', maxWidth: 800, height: '80%' }}>
+                <ArticleEditor />
+              </Paper>
+            </Modal>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </>
   );
 }
 export default Navbar;

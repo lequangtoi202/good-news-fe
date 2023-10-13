@@ -123,21 +123,3 @@
     }
   }
 }
-.back-to-top {
-  bottom: 120px;
-  right: -65px;
-  position: fixed;
-  background: #f63a3a;
-  color: #fff;
-  cursor: pointer;
-  z-index: 100;
-  border-radius: 10px 10px 0 0;
-  -webkit-transform: rotate(-90deg);
-  transform: rotate(-90deg);
-
-  p {
-    margin-bottom: 0;
-    line-height: 30px;
-    padding: 0 40px;
-  }
-}

@@ -1,9 +1,7 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { IconButton } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
@@ -14,20 +12,21 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { API_URL } from '../../constant';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { UtilsFunction } from '../../utils';
+import InputFileUpload from '../../components/InputFileUpload/InputFileUpload';
+import { API_URL } from '../../constant';
 import { RootState } from '../../redux/store';
+import { UtilsFunction } from '../../utils';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Good News
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -40,7 +39,8 @@ const defaultTheme = createTheme();
 export default function SignUp() {
   const error = useSelector((state: RootState) => state.error);
   const [userRegistered, setUserRegistered] = useState({});
-  const { handleShowError } = UtilsFunction();
+  const [loading, setLoading] = useState(false);
+  const { handleShowError, handleShowSuccess } = UtilsFunction();
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
@@ -89,6 +89,8 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
+
     if (!isUsernameEmpty && !isEmailEmpty && !isPasswordEmpty && !isFullNameEmpty) {
       const registerRequest = {
         ...formData,
@@ -108,11 +110,17 @@ export default function SignUp() {
         });
 
         setUserRegistered(response.data);
-        clearInputData();
+        handleShowSuccess('Đăng ký thành công!');
       } catch (err) {
         handleShowError('Đăng ký tài khoản không thành công!');
+      } finally {
+        clearInputData();
       }
     }
+  };
+
+  const handleAvatarChange = (selectedFile: File | null) => {
+    setAvatar(selectedFile);
   };
 
   return (
@@ -241,23 +249,20 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <input
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  id="avatar-input"
-                  type="file"
-                  onChange={(e) => setAvatar(e.target.files ? e.target.files[0] : null)}
-                />
-                <label htmlFor="avatar-input">
-                  <IconButton color="primary" aria-label="upload picture" component="span">
-                    <PhotoCamera />
-                  </IconButton>
-                </label>
+                <InputFileUpload setImage={handleAvatarChange} />
+                {avatar && <p>File: {avatar.name}</p>}
               </Grid>
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Đăng ký
-            </Button>
+            <LoadingButton
+              type="submit"
+              fullWidth
+              sx={{ mt: 3, mb: 2 }}
+              loading={loading}
+              loadingPosition="end"
+              variant="contained"
+            >
+              <span>Đăng ký</span>
+            </LoadingButton>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/sign-in" variant="body2">

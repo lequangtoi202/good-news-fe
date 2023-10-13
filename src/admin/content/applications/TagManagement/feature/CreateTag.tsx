@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
@@ -15,6 +15,7 @@ function CreateTag() {
   const navigate = useNavigate();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
   });
@@ -33,6 +34,7 @@ function CreateTag() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     const tagReq = {
       name: formData.name,
     };
@@ -45,9 +47,11 @@ function CreateTag() {
       })
       .then((res) => {
         handleShowSuccess('Thành công');
+        setLoading(false);
         navigate('/admin/management/tags');
       })
       .catch((err) => {
+        setLoading(false);
         handleShowError('Thất bại');
       });
     clearInputData();
@@ -77,9 +81,16 @@ function CreateTag() {
           value={formData.name}
           onChange={handleChange}
         />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Box>
   );

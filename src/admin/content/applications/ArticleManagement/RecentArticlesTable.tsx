@@ -26,6 +26,7 @@ import Cookies from 'universal-cookie';
 import { UtilsFunction } from '../../../../utils';
 import { useDispatch } from 'react-redux';
 import { deleteAny } from '../../../../redux/adminReducer';
+import { useNavigate } from 'react-router-dom';
 
 interface RecentArticlesTableProps {
   className?: string;
@@ -43,6 +44,7 @@ const RecentArticlesTable: FC<RecentArticlesTableProps> = ({
   onPageChange,
   onLimitChange,
 }) => {
+  const navigate = useNavigate();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const dispatch = useDispatch();
@@ -76,7 +78,7 @@ const RecentArticlesTable: FC<RecentArticlesTableProps> = ({
   };
 
   const handleDeleteArticle = (articleId: number) => {
-    const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa quyền này không?');
+    const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?');
     if (confirmDelete) {
       if (token) {
         axios
@@ -88,6 +90,7 @@ const RecentArticlesTable: FC<RecentArticlesTableProps> = ({
           })
           .then((res) => {
             dispatch(deleteAny(true));
+            navigate('/admin/management/articles');
           })
           .catch((err) => {
             handleShowError(err.message);

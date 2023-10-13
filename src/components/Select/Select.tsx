@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FormControl, MenuItem, Select, InputLabel, SelectChangeEvent } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import React from 'react';
 
 interface CustomSelectProps {
   label: string;

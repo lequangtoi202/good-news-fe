@@ -20,6 +20,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { useSelector } from 'react-redux';
 import { Author } from '../../model/Author';
 import Cookies from 'universal-cookie';
+import CountArticleCate from '../../components/CountArticleCate/CountArticleCate';
 
 const cx = classNames.bind(styles);
 
@@ -29,11 +30,13 @@ function Home() {
   const { handleShowError } = UtilsFunction();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
+  const [isLoading, setIsLoading] = useState(false);
   const [articles, setArticles] = useState<Article[]>([]);
   const [authorMe, setAuthorMe] = useState<Author | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [visibleArticles, setVisibleArticles] = useState(5);
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     axios
       .get(API_URL + 'articles-status?type=published')
@@ -66,13 +69,6 @@ function Home() {
         });
     }
   }, []);
-  const handleScroll = () => {
-    if (containerRef.current) {
-      if (containerRef.current.scrollTop + containerRef.current.clientHeight >= containerRef.current.scrollHeight) {
-        setVisibleArticles((prevVisibleArticles) => prevVisibleArticles + 5);
-      }
-    }
-  };
   return (
     <>
       {error && (
@@ -84,7 +80,7 @@ function Home() {
         </div>
       )}
 
-      <div ref={containerRef} onScroll={handleScroll} className={cx('wrapper')}>
+      <div className={cx('wrapper')}>
         <ul className={cx('categories-section')}>
           {categories &&
             categories.length > 0 &&
@@ -150,7 +146,7 @@ function Home() {
                         >
                           <Link to={`/category/${category.id}`}>
                             <span>{category.name}</span>
-                            <span className={cx('category-number')}>02</span>
+                            <CountArticleCate id={category.id} />
                           </Link>
                         </div>
                       ))}
@@ -159,7 +155,7 @@ function Home() {
               </div>
             </div>
 
-            <div className={cx('main-posts-wrapper', 'row')}>
+            <div ref={containerRef} className={cx('main-posts-wrapper', 'row')}>
               <div className={cx('main-posts-outer', 'col-md-9')}>
                 <h3 className={cx('main-posts-title')}>Main posts</h3>
                 <div className={cx('main-articles-wrapper', 'row')}>

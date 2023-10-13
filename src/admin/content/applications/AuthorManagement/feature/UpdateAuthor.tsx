@@ -11,11 +11,13 @@ import Cookies from 'universal-cookie';
 import { API_URL } from '../../../../../constant';
 import { resetDeleteStatus } from '../../../../../redux/adminReducer';
 import { UtilsFunction } from '../../../../../utils';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 function UpdateAuthor() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { handleShowSuccess, handleShowError } = UtilsFunction();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
@@ -52,6 +54,7 @@ function UpdateAuthor() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     const authorReq = {
       authorName: formData.authorName,
     };
@@ -67,9 +70,11 @@ function UpdateAuthor() {
         setTimeout(() => {
           dispatch(resetDeleteStatus());
         }, 2000);
+        setLoading(false);
         navigate('/admin/management/authors');
       })
       .catch((err) => {
+        setLoading(false);
         handleShowError('Thất bại');
       });
   };
@@ -98,9 +103,16 @@ function UpdateAuthor() {
           value={formData.authorName}
           onChange={handleChange}
         />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Box>
   );

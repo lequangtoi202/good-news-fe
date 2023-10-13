@@ -1,26 +1,12 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Avatar from '@mui/material/Avatar';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
-import { TextareaAutosize } from '@mui/base';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import axios, { AxiosResponse } from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { clearError, setError } from '../../../../../redux/errorReducer';
-import { API_URL } from '../../../../../constant';
-import { makeStyles } from '@mui/styles';
-import { IconButton } from '@mui/material';
-import { PhotoCamera } from '@mui/icons-material';
+import { useNavigate, useParams } from 'react-router-dom';
+import InputFileUpload from '../../../../../components/InputFileUpload/InputFileUpload';
 import { UtilsFunction } from '../../../../../utils';
 
 const textarea = {
@@ -38,7 +24,7 @@ function UpdateArticle() {
   const { handleShowError, handleShowSuccess } = UtilsFunction();
   const navigate = useNavigate();
   const [image, setImage] = useState<File | null>(null);
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -68,6 +54,10 @@ function UpdateArticle() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+  };
+
+  const handleImageChange = (selectedFile: File | null) => {
+    setImage(selectedFile);
   };
 
   return (
@@ -124,23 +114,20 @@ function UpdateArticle() {
           value={formData.source}
           onChange={handleChange}
         />
-        <Grid item xs={12}>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="image-input"
-            type="file"
-            onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
-          />
-          <label htmlFor="avatar-input">
-            <IconButton color="primary" aria-label="upload picture" component="span">
-              <PhotoCamera />
-            </IconButton>
-          </label>
+        <Grid item xs={12} sx={{ mt: 2 }}>
+          <InputFileUpload setImage={handleImageChange} />
+          {image && <p>File: {image.name}</p>}
         </Grid>
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Box>
   );

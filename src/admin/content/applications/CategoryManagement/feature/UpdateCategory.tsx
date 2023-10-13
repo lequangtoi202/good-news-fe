@@ -1,7 +1,5 @@
-import { PhotoCamera } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
@@ -12,6 +10,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import InputFileUpload from '../../../../../components/InputFileUpload/InputFileUpload';
 import { API_URL } from '../../../../../constant';
 import { UtilsFunction } from '../../../../../utils';
 
@@ -22,6 +21,7 @@ function UpdateCategory() {
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
   const [image, setImage] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -43,6 +43,10 @@ function UpdateCategory() {
       });
   }, [id]);
 
+  const handleSetImage = (selectedFile: File | null) => {
+    setImage(selectedFile);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
 
@@ -55,6 +59,7 @@ function UpdateCategory() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     const categoryReq = {
       name: formData.name,
       description: formData.description,
@@ -75,9 +80,11 @@ function UpdateCategory() {
       })
       .then((res) => {
         handleShowSuccess('Thành công');
+        setLoading(false);
         navigate('/admin/management/categories');
       })
       .catch((err) => {
+        setLoading(false);
         handleShowError('Thất bại');
       });
   };
@@ -121,23 +128,20 @@ function UpdateCategory() {
           control={<Checkbox checked={formData.active} onChange={handleChange} name="active" color="primary" />}
           label="Active"
         />
-        <Grid item xs={12}>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="image-input"
-            type="file"
-            onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
-          />
-          <label htmlFor="image-input">
-            <IconButton color="primary" aria-label="upload picture" component="span">
-              <PhotoCamera />
-            </IconButton>
-          </label>
+        <Grid item xs={12} sx={{ mt: 2 }}>
+          <InputFileUpload setImage={handleSetImage} />
+          {image && <p>File: {image.name}</p>}
         </Grid>
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Box>
   );

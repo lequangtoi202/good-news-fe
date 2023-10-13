@@ -27,6 +27,7 @@ import { User } from '../../../../model/User';
 import { deleteAny, resetDeleteStatus } from '../../../../redux/adminReducer';
 import { UtilsFunction } from '../../../../utils';
 import BulkActions from './BulkActions';
+import { format } from 'date-fns';
 
 interface RecentUsersTableProps {
   className?: string;
@@ -171,7 +172,7 @@ const RecentUsersTable: FC<RecentUsersTableProps> = ({
                   </TableCell>
                   <TableCell>
                     <Typography variant="body1" color="text.primary" gutterBottom noWrap>
-                      {user.dateOfBirth}
+                      {format(new Date(user.dateOfBirth), 'dd/MM/yyyy')}
                     </Typography>
                   </TableCell>
                   <TableCell>

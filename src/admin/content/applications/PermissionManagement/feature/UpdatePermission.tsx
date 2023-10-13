@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 function UpdatePermission() {
   const { id } = useParams();
   const { handleShowSuccess, handleShowError } = UtilsFunction();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cookies = new Cookies();
@@ -51,6 +52,7 @@ function UpdatePermission() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     const roleReq = {
       name: formData.name,
     };
@@ -66,9 +68,11 @@ function UpdatePermission() {
         setTimeout(() => {
           dispatch(resetDeleteStatus());
         }, 2000);
+        setLoading(false);
         navigate('/admin/management/permissions');
       })
       .catch((err) => {
+        setLoading(false);
         handleShowError('Thất bại');
       });
     clearInputData();
@@ -98,9 +102,16 @@ function UpdatePermission() {
           value={formData.name}
           onChange={handleChange}
         />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Box>
   );

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import {
   Avatar,
@@ -106,10 +106,10 @@ function HeaderUserbox() {
         }}
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar variant="rounded" alt={currentUser?.fullName} src={currentUser?.avatar} />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">{user.jobtitle}</UserBoxDescription>
+            <UserBoxLabel variant="body1">{currentUser?.fullName}</UserBoxLabel>
+            <UserBoxDescription variant="body2">{currentUser?.username}</UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
@@ -129,10 +129,10 @@ function HeaderUserbox() {
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
+          <Link to="/logout">
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
-          </Button>
+          </Link>
         </Box>
       </Popover>
     </>

@@ -25,6 +25,7 @@ import { Bookmark } from '../../../../model/Bookmark';
 import { deleteAny, resetDeleteStatus } from '../../../../redux/adminReducer';
 import { UtilsFunction } from '../../../../utils';
 import BulkActions from './BulkActions';
+import { format } from 'date-fns';
 
 interface RecentBookmarksTableProps {
   className?: string;
@@ -162,7 +163,7 @@ const RecentBookmarksTable: FC<RecentBookmarksTableProps> = ({
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="text.secondary">
-                      {bookmark.createdAt}
+                      {format(new Date(bookmark.createdAt), 'dd/MM/yyyy hh:mm:ss')}
                     </Typography>
                   </TableCell>
                   <TableCell>

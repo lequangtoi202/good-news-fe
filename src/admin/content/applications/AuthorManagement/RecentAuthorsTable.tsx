@@ -29,6 +29,7 @@ import { deleteAny, resetDeleteStatus } from '../../../../redux/adminReducer';
 import { useNavigate } from 'react-router-dom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
+import { format } from 'date-fns';
 interface RecentAuthorsTableProps {
   className?: string;
   authors: Author[];
@@ -193,7 +194,7 @@ const RecentAuthorsTable: FC<RecentAuthorsTableProps> = ({
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="text.secondary">
-                      {author.createdAt}
+                      {format(new Date(author.createdAt), 'dd/MM/yyyy hh:mm:ss')}
                     </Typography>
                   </TableCell>
                   <TableCell>

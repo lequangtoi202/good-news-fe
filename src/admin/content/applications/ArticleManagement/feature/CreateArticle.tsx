@@ -1,19 +1,20 @@
-import { PhotoCamera } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import axios, { AxiosResponse } from 'axios';
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import InputFileUpload from '../../../../../components/InputFileUpload/InputFileUpload';
 import MultiSelect from '../../../../../components/MultiSelect/MultiSelect';
 import CustomSelect from '../../../../../components/Select/Select';
+import { Category } from '../../../../../model/Category';
+import { TagModel } from '../../../../../model/TagModel';
+import axios from 'axios';
 import { API_URL } from '../../../../../constant';
-import { clearError, setError } from '../../../../../redux/errorReducer';
+import Cookies from 'universal-cookie';
 
 const textarea = {
   width: '100%',
@@ -28,13 +29,35 @@ const textarea = {
 function CreateArticle() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cookies = new Cookies();
+  const token = cookies.get('accessToken');
+  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<File | null>(null);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [selectedTagOption, setSelectedTagOption] = useState<string[]>([]);
+  const [selectedCateOption, setSelectedCateOption] = useState<string>('');
+  const [categoriesLabels, setCategoriesLabels] = useState<string[]>([]);
+  const [tagLabels, setTagsLabels] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     source: '',
   });
+
+  useEffect(() => {
+    axios.get(API_URL + 'categories').then((res) => {
+      const categories = res.data.map((cate: Category) => cate.id.toString());
+      setCategoriesLabels(res.data.map((cate: Category) => cate.name));
+      setCategories(categories);
+    });
+
+    axios.get(API_URL + 'tags').then((res) => {
+      const tags = res.data;
+      setTags(tags.map((tag: TagModel) => tag.id.toString()));
+      setTagsLabels(res.data.map((tag: TagModel) => tag.name));
+    });
+  }, []);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -49,6 +72,9 @@ function CreateArticle() {
       [name]: value,
     }));
   };
+  const handleSetImage = (selectedFile: File | null) => {
+    setImage(selectedFile);
+  };
 
   const clearInputData = () => {
     setFormData({
@@ -58,11 +84,12 @@ function CreateArticle() {
     });
   };
 
-  const [selectedOption, setSelectedOption] = useState<string>('Option 1');
-  const options = ['Option 1', 'Option 2', 'Option 3'];
-
   const handleSelectChange = (value: string) => {
-    setSelectedOption(value);
+    setSelectedCateOption(value);
+  };
+
+  const handleMultiSelectChange = (value: string[]) => {
+    setSelectedTagOption(value);
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -101,7 +128,6 @@ function CreateArticle() {
           rows={6}
           placeholder="Type content article..."
         />
-        <label htmlFor="category">Category: </label>
         <TextField
           margin="normal"
           required
@@ -113,38 +139,38 @@ function CreateArticle() {
           value={formData.source}
           onChange={handleChange}
         />
-        <CustomSelect
-          text={options}
-          label="Select an option"
-          options={options}
-          value={selectedOption}
-          onChange={handleSelectChange}
-        />
-        <MultiSelect
-          label="Select Options"
-          options={['Option 1', 'Option 2', 'Option 5']}
-          selectedValues={['Option 1']}
-          onChange={(selected) => {
-            console.log('Selected:', selected);
-          }}
-        />
-        <Grid item xs={12}>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="image-input"
-            type="file"
-            onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
+        <Grid item sx={{ mt: 2 }}>
+          <CustomSelect
+            text={categoriesLabels}
+            label="Chọn danh mục"
+            options={categories}
+            value={selectedCateOption}
+            onChange={handleSelectChange}
           />
-          <label htmlFor="image-input">
-            <IconButton color="primary" aria-label="upload picture" component="span">
-              <PhotoCamera />
-            </IconButton>
-          </label>
         </Grid>
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <Grid item sx={{ mt: 2 }}>
+          <MultiSelect
+            text={tagLabels}
+            label="Chọn thẻ"
+            options={tags}
+            selectedValues={selectedTagOption}
+            onChange={handleMultiSelectChange}
+          />
+        </Grid>
+        <Grid item xs={12} sx={{ mt: 2 }}>
+          <InputFileUpload setImage={handleSetImage} />
+          {image && <p>File: {image.name}</p>}
+        </Grid>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Box>
   );

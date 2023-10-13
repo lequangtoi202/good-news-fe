@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Category } from '../../../model/Category';
-import styles from './Footer.module.scss';
-import classNames from 'classnames/bind';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Fab } from '@mui/material';
 import axios from 'axios';
-import { API_URL } from '../../../constant';
-import { UtilsFunction } from '../../../utils';
-import { RegisterNotification } from '../../../model/RegisterNotification';
-import Cookies from 'universal-cookie';
+import classNames from 'classnames/bind';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import ScrollTop from '../../../components/ScrollTop/ScrollTop';
+import { API_URL } from '../../../constant';
+import { Category } from '../../../model/Category';
+import { RegisterNotification } from '../../../model/RegisterNotification';
+import { UtilsFunction } from '../../../utils';
+import styles from './Footer.module.scss';
 
 const cx = classNames.bind(styles);
-function Footer() {
-  const cookies = new Cookies();
-  const token = cookies.get('accessToken');
+function Footer({ props }: any) {
   const { handleShowError, handleShowSuccess } = UtilsFunction();
   const [categories, setCategories] = useState<Category[]>([]);
   const [registerNotification, setRegisterNotification] = useState<RegisterNotification>({
@@ -66,6 +66,14 @@ function Footer() {
         handleShowError('Đã có lỗi xảy ra');
         clearInputData();
       });
+  };
+
+  const handleScrollToTop = () => {
+    const topElement = document.getElementById('top');
+    console.log(topElement);
+    if (topElement) {
+      topElement.scrollIntoView({ behavior: 'smooth' });
+    }
   };
   return (
     <>
@@ -162,9 +170,15 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className={cx('back-to-top')} style={{ display: 'block' }}>
-        <p>Back to top</p>
-      </div>
+      <ScrollTop {...props}>
+        <Fab
+          size="small"
+          aria-label="scroll back to top"
+          sx={{ backgroundColor: '#f63a3a', color: '#fff', '&:hover': { backgroundColor: '#df3535', color: '#fff' } }}
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </ScrollTop>
     </>
   );
 }

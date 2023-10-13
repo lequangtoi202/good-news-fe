@@ -129,14 +129,12 @@ body {
   }
 
   .error {
-    background-color: rgb(253, 237, 237);
     width: 30%;
     position: fixed;
     right: 0;
     top: 80px;
     line-height: 55px;
     z-index: 100;
-    box-shadow: -1px 2px #ebe7e7;
     padding: 6px 16px;
     color: rgb(95, 33, 32);
     transition: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -149,7 +147,6 @@ body {
     right: 0;
     top: 80px;
     line-height: 55px;
-    box-shadow: -1px 2px #ebe7e7;
     padding: 6px 16px;
     color: #155724;
     z-index: 100;

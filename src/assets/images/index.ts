@@ -1,5 +1,5 @@
 const images: Record<string, string> = {
-  logo: require('./logo.jpg'),
+  logo: require('./logo.png'),
   noImage: require('./no-image.png'),
 };
 

@@ -25,6 +25,7 @@ import { API_URL, GOOGLE_CLIENT_ID } from '../../constant';
 import { RootState } from '../../redux/store';
 import { login } from '../../redux/userReducer';
 import { UtilsFunction } from '../../utils';
+import { Permission } from '../../model/Permission';
 
 function Copyright(props: any) {
   return (
@@ -69,7 +70,12 @@ function Login() {
     }
   };
   const next = new URLSearchParams(location.search).get('next');
-
+  const clearInputData = () => {
+    setFormData({
+      username: '',
+      password: '',
+    });
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -99,9 +105,27 @@ function Login() {
             'Content-Type': 'application/json',
           },
         });
-        setCurrentUser(response.data);
-        dispatch(login({ payload: { userInfo: resToken.accessToken } }));
-        navigate(next || '/');
+        const roleRes: AxiosResponse = await axios.get(API_URL + `users/${response.data.id}/roles`, {
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json',
+          },
+        });
+        const hasRoleAdmin = roleRes.data.some((role: Permission) => role.name === 'ROLE_ADMIN');
+        if (next) {
+          if (hasRoleAdmin) {
+            setCurrentUser(response.data);
+            dispatch(login({ payload: { userInfo: resToken.accessToken } }));
+            navigate(next || '/');
+          } else {
+            handleShowError('Bạn không có quyền đăng nhập vào trang này.');
+            clearInputData();
+          }
+        } else {
+          setCurrentUser(response.data);
+          dispatch(login({ payload: { userInfo: resToken.accessToken } }));
+          navigate('/');
+        }
       } catch (err: any) {
         if (err.response.status === 400) {
           handleShowError('Tài khoản hoặc mật khẩu không đúng!');

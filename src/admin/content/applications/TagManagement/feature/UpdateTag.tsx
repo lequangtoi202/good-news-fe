@@ -1,21 +1,22 @@
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { API_URL } from '../../../../../constant';
-import { UtilsFunction } from '../../../../../utils';
 import { resetDeleteStatus } from '../../../../../redux/adminReducer';
-import { useDispatch } from 'react-redux';
+import { UtilsFunction } from '../../../../../utils';
 
 function UpdateTag() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { handleShowSuccess, handleShowError } = UtilsFunction();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const cookies = new Cookies();
   const token = cookies.get('accessToken');
@@ -66,9 +67,11 @@ function UpdateTag() {
         setTimeout(() => {
           dispatch(resetDeleteStatus());
         }, 2000);
+        setLoading(false);
         navigate('/admin/management/tags');
       })
       .catch((err) => {
+        setLoading(false);
         handleShowError('Thất bại');
       });
     clearInputData();
@@ -98,9 +101,16 @@ function UpdateTag() {
           value={formData.name}
           onChange={handleChange}
         />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Box>
   );
