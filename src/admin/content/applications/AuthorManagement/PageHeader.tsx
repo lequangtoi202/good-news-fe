@@ -14,7 +14,6 @@ function PageHeader() {
         <Typography variant="h3" component="h3" gutterBottom>
           Authors Management
         </Typography>
-        <Typography variant="subtitle2">{user.name}, these are your recent users</Typography>
       </Grid>
       <Grid item>
         <Link to={'/admin/management/authors/add'}>

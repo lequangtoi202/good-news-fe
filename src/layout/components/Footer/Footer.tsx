@@ -1,5 +1,5 @@
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Fab } from '@mui/material';
+import { Avatar, Fab } from '@mui/material';
 import axios from 'axios';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import { Category } from '../../../model/Category';
 import { RegisterNotification } from '../../../model/RegisterNotification';
 import { UtilsFunction } from '../../../utils';
 import styles from './Footer.module.scss';
+import images from '../../../assets/images';
 
 const cx = classNames.bind(styles);
 function Footer({ props }: any) {
@@ -153,7 +154,9 @@ function Footer({ props }: any) {
                 </div>
               </div>
             </div>
-            <div className={cx('footer-logo')}></div>
+            <div className={cx('footer-logo', 'col-lg-3')}>
+              <Avatar src={images.logo} sx={{ width: '100%', height: '100%' }} />
+            </div>
           </div>
         </div>
       </footer>

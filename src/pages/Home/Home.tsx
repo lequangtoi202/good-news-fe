@@ -157,7 +157,7 @@ function Home() {
 
             <div ref={containerRef} className={cx('main-posts-wrapper', 'row')}>
               <div className={cx('main-posts-outer', 'col-md-9')}>
-                <h3 className={cx('main-posts-title')}>Main posts</h3>
+                <h3 className={cx('main-posts-title')}>Bài viết chính</h3>
                 <div className={cx('main-articles-wrapper', 'row')}>
                   {articles && articles.length > 0 ? (
                     articles.map((article, index) => (
@@ -172,7 +172,7 @@ function Home() {
               </div>
               <div className={cx('about-me-wrapper', 'col-md-3')}>
                 <div className={cx('about-me-header')}>
-                  <h4>About me</h4>
+                  <h4>Bản thân</h4>
                 </div>
                 {currentUser && (
                   <div className={cx('about-item')}>

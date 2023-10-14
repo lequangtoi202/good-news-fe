@@ -108,7 +108,7 @@ function ResetPassword() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            RESET MẬT KHẨU
+            KHÔI PHỤC MẬT KHẨU
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <Grid container spacing={2}>
@@ -142,7 +142,7 @@ function ResetPassword() {
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Reset mật khẩu
+              Khôi phục mật khẩu
             </Button>
           </Box>
         </Box>
