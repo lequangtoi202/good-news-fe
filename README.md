@@ -1,6 +1,8 @@
 
 # good_news_fe
 
+![Run](./src/assets/images/logo.png)
+
 ## Hướng dẫn cài đặt project good_news_fe
 
 1. Clone project 
