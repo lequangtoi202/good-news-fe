@@ -275,7 +275,7 @@ function ArticleComp() {
                   <MediaCard key={index} article={article} className={cx('article-item', 'col-md-3 col-sm-4 col-12')} />
                 ))
             ) : (
-              <p>No articles to display</p>
+              <p>Không có bài viết liên quan</p>
             )}
           </div>
         </div>

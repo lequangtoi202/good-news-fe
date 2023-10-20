@@ -38,6 +38,7 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const error = useSelector((state: RootState) => state.error);
+  const success = useSelector((state: RootState) => state.success);
   const [userRegistered, setUserRegistered] = useState({});
   const [loading, setLoading] = useState(false);
   const { handleShowError, handleShowSuccess } = UtilsFunction();
@@ -85,6 +86,7 @@ export default function SignUp() {
       address: '',
       email: '',
     });
+    setAvatar(null);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -115,6 +117,7 @@ export default function SignUp() {
         handleShowError('Đăng ký tài khoản không thành công!');
       } finally {
         clearInputData();
+        setLoading(false);
       }
     }
   };
@@ -132,6 +135,14 @@ export default function SignUp() {
             <Alert severity="error">
               <AlertTitle>Error</AlertTitle>
               {error}
+            </Alert>
+          </div>
+        )}
+        {success && (
+          <div className="success">
+            <Alert severity="success">
+              <AlertTitle>Success</AlertTitle>
+              {success}
             </Alert>
           </div>
         )}

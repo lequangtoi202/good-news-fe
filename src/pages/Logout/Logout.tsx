@@ -9,12 +9,13 @@ function Logout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const deleteCookie = (name: string) => {
-    document.cookie = name + '=; Max-Age=-99999999;';
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   };
 
   useEffect(() => {
     deleteCookie('accessToken');
     deleteCookie('refreshToken');
+    deleteCookie('user');
     setCurrentUser(null);
     dispatch(logout());
 

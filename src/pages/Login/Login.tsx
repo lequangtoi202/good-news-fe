@@ -105,6 +105,7 @@ function Login() {
             'Content-Type': 'application/json',
           },
         });
+        document.cookie = `user=${JSON.stringify(response.data)}; Path=/;`;
         const roleRes: AxiosResponse = await axios.get(API_URL + `users/${response.data.id}/roles`, {
           headers: {
             Authorization: 'Bearer ' + accessToken,

@@ -1,5 +1,6 @@
-import { ReactNode, createContext, useState, useContext } from 'react';
+import { ReactNode, createContext, useState, useContext, useEffect } from 'react';
 import { User } from '../model/User';
+import Cookies from 'universal-cookie';
 
 interface UserContextType {
   currentUser: User | null;
@@ -9,8 +10,14 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const cookie = new Cookies();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-
+  useEffect(() => {
+    const userFromCookie = cookie.get('user');
+    if (userFromCookie) {
+      setCurrentUser(userFromCookie);
+    }
+  }, []);
   return <UserContext.Provider value={{ currentUser, setCurrentUser }}>{children}</UserContext.Provider>;
 };
 

@@ -26,6 +26,7 @@ import { API_URL } from '../../../constant';
 import { Author } from '../../../model/Author';
 import { RootState } from '../../../redux/store';
 import { UtilsFunction } from '../../../utils';
+import { useUser } from '../../../hook';
 
 const pages = [
   { page: 'Trang chủ', path: '/' },
@@ -38,7 +39,7 @@ type Setting = {
 };
 
 function Navbar() {
-  const { currentUser } = useAuth();
+  const { currentUser } = useUser();
   const [authorMe, setAuthorMe] = useState<Author | null>(null);
   const cookies = new Cookies();
   const { handleShowError } = UtilsFunction();
@@ -47,8 +48,7 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const initialSettings: Setting[] = [];
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  const settings: Setting[] = isLoggedIn
+  const settings: Setting[] = currentUser
     ? [
         ...initialSettings,
         { page: 'Tài khoản', path: '/account' },
